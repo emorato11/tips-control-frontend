@@ -1,0 +1,14 @@
+{
+  // "ts-node": {
+  //   "require": ["tsconfig-paths/register"]
+  // },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}
