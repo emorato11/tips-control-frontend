@@ -3,7 +3,7 @@ import { Script } from 'node:vm';
 
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>Tipsters view</h1>
     <br />
   </div>
 </template>

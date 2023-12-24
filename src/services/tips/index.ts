@@ -1,4 +1,4 @@
-import { Tip } from '@/types/Tip'
+import type { Tip } from '@/types/Tip'
 import { apiInstance } from '../api/axios'
 
 export default {

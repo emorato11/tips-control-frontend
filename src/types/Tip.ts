@@ -13,5 +13,6 @@ export interface Tip {
   spent: number
   status: Status
   tipster: string
+  type: string
   selections: Selection[]
 }

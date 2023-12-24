@@ -1,5 +1,5 @@
-export type Status = {
-  PENDING: 'pending'
-  WON: 'won'
-  FAILED: 'failed'
+export enum Status {
+  PENDING = 'pending',
+  WON = 'won',
+  FAILED = 'failed'
 }
