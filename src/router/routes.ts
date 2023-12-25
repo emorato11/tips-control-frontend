@@ -1,10 +1,16 @@
 import HomeView from '@/views/HomeView.vue'
 import TipstersView from '@/views/TipstersView.vue'
+import CreateTip from '@/views/CreateTip.vue'
 export default [
   {
     path: '/home',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/create-tip',
+    name: 'create-tip',
+    component: CreateTip
   },
   {
     path: '/tipsters',

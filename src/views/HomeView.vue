@@ -1,63 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import {
-  mdiBasketball,
-  mdiTennisBall,
-  mdiSoccer,
-  mdiAmpersand,
-  mdiBell,
-  mdiArrowLeft,
-  mdiArrowRight
-} from '@mdi/js'
+import { onMounted, ref } from 'vue'
+import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
-import { useCounterStore } from '@/stores/counter'
-import { CUSTOM_SHORT_DATE_FORMAT, getParsedDate } from '@/utils/date'
-import { parseNumberToCurrency } from '@/utils/currency'
+import { useTipsStore } from '@/stores/tips'
 import { Status } from '@/types/Common'
 
-// Mover a types
-enum SPORTS_COLORS {
-  basketball = '#6EC1E4',
-  tennis = '#F4A261',
-  football = '#6D4C41',
-  multi = '#FFADAD',
-  default = '#eeee'
-}
-
-const counterStore = useCounterStore()
-const { getAllTips } = counterStore
-const tips = computed(() => {
-  const newTips = counterStore.tips?.map((tip) => {
-    return {
-      ...tip,
-      ...getSportAssets(tip.type),
-      date: getParsedDate(tip.date, CUSTOM_SHORT_DATE_FORMAT),
-      potentialReturn: parseNumberToCurrency(tip.potentialReturn),
-      spent: parseNumberToCurrency(tip.spent)
-    }
-  })
-
-  return newTips
-})
-
-// Mover a utils
-const getSportAssets = (sport: string) => {
-  if (sport === 'basketball') {
-    return { icon: mdiBasketball, color: SPORTS_COLORS.basketball }
-  }
-  if (sport === 'tennis') {
-    return { icon: mdiTennisBall, color: SPORTS_COLORS.tennis }
-  }
-  if (sport === 'football') {
-    return { icon: mdiSoccer, color: SPORTS_COLORS.football }
-  }
-  if (sport === 'multi') {
-    return { icon: mdiAmpersand, color: SPORTS_COLORS.multi }
-  }
-
-  return { icon: mdiBell, color: SPORTS_COLORS.default }
-}
+const tipsStore = useTipsStore()
+const { getAllTips } = tipsStore
 
 const getStatusColor = (status: Status) => {
   if (status === Status.PENDING) return 'orange'
@@ -72,7 +22,12 @@ onMounted(async () => {
 </script>
 <template>
   <v-container class="mb-6">
-    <v-data-iterator :items="tips" item-value="name" :items-per-page="6" :search="search">
+    <v-data-iterator
+      :items="tipsStore.parsedTips"
+      item-value="name"
+      :items-per-page="6"
+      :search="search"
+    >
       <template #header>
         <HomeFilters />
       </template>
