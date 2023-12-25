@@ -1,6 +1,7 @@
 import { Status } from './Common'
 
 export interface Selection {
+  id?: string
   name: string
   status: Status
 }
@@ -16,3 +17,5 @@ export interface Tip {
   type: string
   selections: Selection[]
 }
+
+export type CreateTip = Omit<Tip, 'id'>

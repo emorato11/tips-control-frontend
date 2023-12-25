@@ -1,4 +1,4 @@
-import type { Tip } from '@/types/Tip'
+import type { CreateTip, Tip } from '@/types/Tip'
 import { apiInstance } from '../api/axios'
 
 export default {
@@ -10,11 +10,17 @@ export default {
     } catch (error) {
       console.log(error)
     }
-  }
+  },
 
-  // show( id ){
-  //     return apiInstance.get( 'https://music.com/api/v1/songs/'+id );
-  // },
+  async create(tip: CreateTip) {
+    try {
+      const response = await apiInstance.post<Tip>('/tips', tip)
+
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   // update( id, data ){
   //     return apiInstance.put( 'https://music.com/api/v1/songs/'+id, data );

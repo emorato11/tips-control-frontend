@@ -1,15 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 import { mdiDeleteOutline, mdiPlus } from '@mdi/js'
-import type { Selection } from '@/types/Tip'
+import type { Selection, CreateTip } from '@/types/Tip'
 import { Status } from '@/types/Common'
+import { useTipsStore } from '@/stores/tips'
 
+const tipsStore = useTipsStore()
+
+const { createTip } = tipsStore
+
+const form = ref()
 const tipName = ref()
+const tipster = ref()
 const date = ref()
+const type = ref()
 const status = ref(Status.PENDING)
 const spent = ref()
 const potentialReturn = ref()
@@ -25,24 +33,64 @@ const statusOptions = ref(Object.values(Status))
 //   }
 // ]
 
+const loading = computed(() => tipsStore.loading)
+
 const addNewSelection = () => {
   selections.value = [...selections.value, { name: '', status: Status.PENDING }]
 }
 const removeSelection = (idx: number) => {
   selections.value = selections.value.filter((_, i) => i !== idx)
 }
+
+const handleSubmit = async () => {
+  const { valid } = await form.value.validate()
+
+  if (valid) {
+    console.log('sigo')
+    await handleCreateTip()
+  }
+}
+
+const handleCreateTip = async () => {
+  const payload: CreateTip = {
+    name: tipName.value,
+    tipster: tipster.value,
+    date: date.value,
+    potentialReturn: potentialReturn.value,
+    spent: spent.value,
+    status: status.value,
+    type: 'football',
+    selections: selections.value
+  }
+
+  await createTip(payload)
+
+  resetForm()
+}
+
+const resetForm = () => {
+  tipster.value = null
+  tipName.value = null
+  date.value = null
+  type.value = null
+  selections.value = [{ name: '', status: Status.PENDING }]
+  spent.value = null
+  potentialReturn.value = null
+  status.value = Status.PENDING
+}
 </script>
 
 <template>
-  <v-form @submit.prevent>
+  <v-form @submit.prevent="handleSubmit" ref="form">
     <v-container>
       <span class="mb-4 text-center text-h4 w-100 d-block">Crear Tip</span>
       <v-row dense class="mb-4">
         <v-col cols="12" lg="4" md="4" sm="6">
           <v-autocomplete
+            v-model="tipster"
             label="Tipster"
             :rules="[(v) => !!v || 'Requerido']"
-            :items="['California', 'Colorado', 'Florida', 'Georgia', 'Texas', 'Wyoming']"
+            :items="['Tipster Apuesta', 'BetInsider']"
             variant="outlined"
           />
         </v-col>
@@ -141,7 +189,9 @@ const removeSelection = (idx: number) => {
         />
       </div>
 
-      <v-btn type="submit" block class="mt-2">Submit</v-btn>
+      <v-btn type="submit" block class="mt-2" :loading="loading" variant="elevated" color="primary"
+        >Submit</v-btn
+      >
     </v-container>
   </v-form>
 </template>

@@ -1,18 +1,14 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import tipsService from '@/services/tips'
-import type { Tip } from '@/types/Tip'
+import type { CreateTip, Tip } from '@/types/Tip'
 import { getSportAssets } from '@/utils/tips'
 import { CUSTOM_SHORT_DATE_FORMAT, getParsedDate } from '@/utils/date'
 import { parseNumberToCurrency } from '@/utils/currency'
 
 export const useTipsStore = defineStore('tips', () => {
   const tips = ref<Tip[]>()
-
-  const getAllTips = async () => {
-    const tipsResponse = await tipsService.getAll()
-    tips.value = tipsResponse
-  }
+  const loading = ref(false)
 
   const parsedTips = computed(() => {
     return tips.value?.map((tip) => {
@@ -26,5 +22,19 @@ export const useTipsStore = defineStore('tips', () => {
     })
   })
 
-  return { getAllTips, tips, parsedTips }
+  const getAllTips = async () => {
+    loading.value = true
+    const tipsResponse = await tipsService.getAll()
+    tips.value = tipsResponse
+
+    loading.value = false
+  }
+
+  const createTip = async (newTip: CreateTip) => {
+    loading.value = true
+    await tipsService.create(newTip)
+    loading.value = false
+  }
+
+  return { getAllTips, createTip, tips, parsedTips, loading }
 })
