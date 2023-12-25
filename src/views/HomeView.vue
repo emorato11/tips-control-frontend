@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
@@ -7,7 +7,9 @@ import { useTipsStore } from '@/stores/tips'
 import { Status } from '@/types/Common'
 
 const tipsStore = useTipsStore()
-const { getAllTips } = tipsStore
+const { getAllTips, updateDateFilters } = tipsStore
+
+const parsedTips = computed(() => tipsStore.parsedTips)
 
 const getStatusColor = (status: Status) => {
   if (status === Status.PENDING) return 'orange'
@@ -16,20 +18,19 @@ const getStatusColor = (status: Status) => {
 }
 const search = ref('')
 
+const updateFilters = (dates: Date[]) => {
+  updateDateFilters(dates)
+}
+
 onMounted(async () => {
   await getAllTips()
 })
 </script>
 <template>
   <v-container class="mb-6">
-    <v-data-iterator
-      :items="tipsStore.parsedTips"
-      item-value="name"
-      :items-per-page="6"
-      :search="search"
-    >
+    <v-data-iterator :items="parsedTips" item-value="name" :items-per-page="6" :search="search">
       <template #header>
-        <HomeFilters />
+        <HomeFilters @update-range-dates="updateFilters" />
       </template>
 
       <template #default="{ items, isExpanded, toggleExpand }">

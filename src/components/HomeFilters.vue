@@ -2,21 +2,35 @@
 import { computed, ref } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { CUSTOM_LONG_DATE_FORMAT, CUSTOM_SHORT_DATE_FORMAT, getParsedDate } from '@/utils/date'
+import {
+  CUSTOM_LONG_DATE_FORMAT,
+  CUSTOM_SHORT_DATE_FORMAT,
+  getParsedDate,
+  createDatesForFilter
+} from '@/utils/date'
 
 // const props = defineProps({
 //   date: Date
 // })
-// const emit = defineEmits(['change', 'delete'])
+
+enum DateFilterType {
+  SINGLE = 'single',
+  WEEK = 'week',
+  MONTH = 'month',
+  RANGE = 'range'
+}
+const emit = defineEmits<{
+  (e: 'updateRangeDates', value: Date[]): void
+}>()
 
 const date = ref<Date | Date[]>()
 const selectedDateFilter = ref()
 
 const dateFilterOptions = ref([
-  { state: 'Día concreto', value: 'single' },
-  { state: 'Semana', value: 'week' },
-  { state: 'Mes', value: 'month' },
-  { state: 'Personalizado', value: 'range' }
+  { state: 'Día concreto', value: DateFilterType.SINGLE },
+  { state: 'Semana', value: DateFilterType.WEEK },
+  { state: 'Mes', value: DateFilterType.MONTH },
+  { state: 'Personalizado', value: DateFilterType.RANGE }
 ])
 const enabledMonthPicker = ref(false)
 const enabledRangePicker = ref(false)
@@ -25,16 +39,15 @@ const enabledWeekPicker = ref(false)
 const enabledCalendar = computed(() => selectedDateFilter.value)
 
 const updateCalendarMode = () => {
-  console.log('cucu', selectedDateFilter.value)
-  if (selectedDateFilter.value === 'range') {
+  if (selectedDateFilter.value === DateFilterType.RANGE) {
     enabledMonthPicker.value = false
     enabledRangePicker.value = true
     enabledWeekPicker.value = false
-  } else if (selectedDateFilter.value === 'week') {
+  } else if (selectedDateFilter.value === DateFilterType.WEEK) {
     enabledMonthPicker.value = false
     enabledRangePicker.value = false
     enabledWeekPicker.value = true
-  } else if (selectedDateFilter.value === 'month') {
+  } else if (selectedDateFilter.value === DateFilterType.MONTH) {
     enabledMonthPicker.value = true
     enabledRangePicker.value = false
     enabledWeekPicker.value = false
@@ -57,6 +70,11 @@ const format = (dates: Date | Date[]) => {
   }
 
   return getParsedDate(dates, CUSTOM_LONG_DATE_FORMAT)
+}
+
+const updateRangeDates = () => {
+  const dates = date.value ? createDatesForFilter(date.value, selectedDateFilter.value) : []
+  emit('updateRangeDates', dates)
 }
 </script>
 <template>
@@ -84,6 +102,7 @@ const format = (dates: Date | Date[]) => {
         :week-picker="enabledWeekPicker"
         :disabled="!enabledCalendar"
         :format="format"
+        @update:model-value="updateRangeDates"
         auto-apply
       />
     </v-col>

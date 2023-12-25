@@ -9,9 +9,18 @@ import { parseNumberToCurrency } from '@/utils/currency'
 export const useTipsStore = defineStore('tips', () => {
   const tips = ref<Tip[]>()
   const loading = ref(false)
+  const dateFilters = ref<Date[]>([])
 
   const parsedTips = computed(() => {
-    return tips.value?.map((tip) => {
+    const filteredTips = dateFilters.value.length
+      ? tips.value?.filter(
+          (tip) =>
+            new Date(tip.date).getTime() > dateFilters.value[0].getTime() &&
+            new Date(tip.date).getTime() < dateFilters.value[1].getTime()
+        )
+      : tips.value
+
+    return filteredTips?.map((tip) => {
       return {
         ...tip,
         ...getSportAssets(tip.type),
@@ -36,5 +45,7 @@ export const useTipsStore = defineStore('tips', () => {
     loading.value = false
   }
 
-  return { getAllTips, createTip, tips, parsedTips, loading }
+  const updateDateFilters = (newDateFilters: Date[]) => (dateFilters.value = newDateFilters)
+
+  return { getAllTips, createTip, updateDateFilters, tips, parsedTips, loading, dateFilters }
 })
