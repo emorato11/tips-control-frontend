@@ -5,9 +5,10 @@ import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
 import HomeFilters from '@/components/HomeFilters.vue'
 import { useTipsStore } from '@/stores/tips'
 import { Status } from '@/types/Common'
+import type { Filters } from '@/types/Filters'
 
 const tipsStore = useTipsStore()
-const { getAllTips, updateDateFilters } = tipsStore
+const { getAllTips, updateFilters } = tipsStore
 
 const parsedTips = computed(() => tipsStore.parsedTips)
 
@@ -18,8 +19,8 @@ const getStatusColor = (status: Status) => {
 }
 const search = ref('')
 
-const updateFilters = (dates: Date[]) => {
-  updateDateFilters(dates)
+const handleUpdateFilters = (filters: Filters) => {
+  updateFilters(filters)
 }
 
 onMounted(async () => {
@@ -30,7 +31,7 @@ onMounted(async () => {
   <v-container class="mb-6">
     <v-data-iterator :items="parsedTips" item-value="name" :items-per-page="6" :search="search">
       <template #header>
-        <HomeFilters @update-range-dates="updateFilters" />
+        <HomeFilters @update-filters="handleUpdateFilters" />
       </template>
 
       <template #default="{ items, isExpanded, toggleExpand }">

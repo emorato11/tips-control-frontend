@@ -8,6 +8,7 @@ import {
   getParsedDate,
   createDatesForFilter
 } from '@/utils/date'
+import type { Filters } from '@/types/Filters'
 
 // const props = defineProps({
 //   date: Date
@@ -20,11 +21,12 @@ enum DateFilterType {
   RANGE = 'range'
 }
 const emit = defineEmits<{
-  (e: 'updateRangeDates', value: Date[]): void
+  (e: 'updateFilters', value: Filters): void
 }>()
 
 const date = ref<Date | Date[]>()
 const selectedDateFilter = ref()
+const selectedTipsterFilter = ref()
 
 const dateFilterOptions = ref([
   { state: 'Día concreto', value: DateFilterType.SINGLE },
@@ -72,9 +74,13 @@ const format = (dates: Date | Date[]) => {
   return getParsedDate(dates, CUSTOM_LONG_DATE_FORMAT)
 }
 
-const updateRangeDates = () => {
+const updateDateFilters = () => {
   const dates = date.value ? createDatesForFilter(date.value, selectedDateFilter.value) : []
-  emit('updateRangeDates', dates)
+  emit('updateFilters', { date: dates })
+}
+
+const updateTipsterFilter = () => {
+  emit('updateFilters', { tipster: selectedTipsterFilter.value })
 }
 </script>
 <template>
@@ -89,8 +95,7 @@ const updateRangeDates = () => {
         item-value="value"
         variant="outlined"
         @update:modelValue="updateCalendarMode"
-      >
-      </v-select>
+      />
     </v-col>
     <v-col cols="6" lg="4" md="4" sm="6">
       <VueDatePicker
@@ -102,20 +107,22 @@ const updateRangeDates = () => {
         :week-picker="enabledWeekPicker"
         :disabled="!enabledCalendar"
         :format="format"
-        @update:model-value="updateRangeDates"
+        @update:model-value="updateDateFilters"
         auto-apply
       />
     </v-col>
     <v-col cols="6" lg="4" md="4" sm="6">
       <v-select
+        v-model="selectedTipsterFilter"
+        clearable
         class="flex-fill"
         label="Filtro de Tipster"
         :items="['Tipster Apuesta', 'BetInsider']"
         item-title="state"
         item-value="value"
         variant="outlined"
-      >
-      </v-select>
+        @update:modelValue="updateTipsterFilter"
+      />
     </v-col>
   </v-row>
 </template>

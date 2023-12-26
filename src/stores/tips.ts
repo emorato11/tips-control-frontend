@@ -5,20 +5,31 @@ import type { CreateTip, Tip } from '@/types/Tip'
 import { getSportAssets } from '@/utils/tips'
 import { CUSTOM_SHORT_DATE_FORMAT, getParsedDate } from '@/utils/date'
 import { parseNumberToCurrency } from '@/utils/currency'
+import type { Filters } from '@/types/Filters'
 
 export const useTipsStore = defineStore('tips', () => {
   const tips = ref<Tip[]>()
   const loading = ref(false)
-  const dateFilters = ref<Date[]>([])
+  const filters = ref<Filters>({ date: [], tipster: '' })
 
   const parsedTips = computed(() => {
-    const filteredTips = dateFilters.value.length
-      ? tips.value?.filter(
+    let filteredTips: Tip[] = tips.value || []
+
+    if (filters.value.date?.length) {
+      const [startDate, endDate] = filters.value.date
+
+      if (startDate && endDate) {
+        filteredTips = filteredTips?.filter(
           (tip) =>
-            new Date(tip.date).getTime() > dateFilters.value[0].getTime() &&
-            new Date(tip.date).getTime() < dateFilters.value[1].getTime()
+            new Date(tip.date).getTime() > startDate.getTime() &&
+            new Date(tip.date).getTime() < endDate.getTime()
         )
-      : tips.value
+      }
+    }
+
+    if (filters.value.tipster) {
+      filteredTips = filteredTips.filter((tip) => tip.tipster === filters.value.tipster)
+    }
 
     return filteredTips?.map((tip) => {
       return {
@@ -45,7 +56,14 @@ export const useTipsStore = defineStore('tips', () => {
     loading.value = false
   }
 
-  const updateDateFilters = (newDateFilters: Date[]) => (dateFilters.value = newDateFilters)
+  const updateFilters = (filt: Filters) => (filters.value = { ...filters.value, ...filt })
 
-  return { getAllTips, createTip, updateDateFilters, tips, parsedTips, loading, dateFilters }
+  return {
+    getAllTips,
+    createTip,
+    updateFilters,
+    tips,
+    parsedTips,
+    loading
+  }
 })
