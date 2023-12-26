@@ -22,6 +22,7 @@ enum DateFilterType {
 }
 const emit = defineEmits<{
   (e: 'updateFilters', value: Filters): void
+  (e: 'updateDateType', value: DateFilterType): void
 }>()
 
 const date = ref<Date | Date[]>()
@@ -58,6 +59,7 @@ const updateCalendarMode = () => {
     enabledRangePicker.value = false
     enabledWeekPicker.value = false
   }
+  emit('updateDateType', selectedDateFilter.value)
 }
 
 const format = (dates: Date | Date[]) => {

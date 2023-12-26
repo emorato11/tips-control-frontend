@@ -1,18 +1,18 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import tipsService from '@/services/tips'
-import type { CreateTip, Tip } from '@/types/Tip'
+import type { Balance, CreateTip, Tip, TipResume } from '@/types/Tip'
 import { getSportAssets } from '@/utils/tips'
 import { CUSTOM_SHORT_DATE_FORMAT, getParsedDate } from '@/utils/date'
-import { parseNumberToCurrency } from '@/utils/currency'
 import type { Filters } from '@/types/Filters'
+import { Status } from '@/types/Common'
 
 export const useTipsStore = defineStore('tips', () => {
   const tips = ref<Tip[]>()
   const loading = ref(false)
   const filters = ref<Filters>({ date: [], tipster: '' })
 
-  const parsedTips = computed(() => {
+  const parsedTips = computed<TipResume[]>(() => {
     let filteredTips: Tip[] = tips.value || []
 
     if (filters.value.date?.length) {
@@ -35,11 +35,28 @@ export const useTipsStore = defineStore('tips', () => {
       return {
         ...tip,
         ...getSportAssets(tip.type),
-        date: getParsedDate(tip.date, CUSTOM_SHORT_DATE_FORMAT),
-        potentialReturn: parseNumberToCurrency(tip.potentialReturn),
-        spent: parseNumberToCurrency(tip.spent)
+        date: getParsedDate(tip.date, CUSTOM_SHORT_DATE_FORMAT)
       }
     })
+  })
+
+  const balance = computed<Balance>(() => {
+    return parsedTips.value.reduce(
+      (accum: { spent: number; potentialReturn: number }, current: TipResume) => {
+        accum.spent = accum.spent + current.spent
+
+        const quantityToConcat =
+          current.status === Status.WON
+            ? current.potentialReturn - current.spent
+            : current.status === Status.PENDING
+              ? 0
+              : current.spent * -1
+
+        accum.potentialReturn = accum.potentialReturn + quantityToConcat
+        return accum
+      },
+      { spent: 0, potentialReturn: 0 }
+    )
   })
 
   const getAllTips = async () => {
@@ -64,6 +81,8 @@ export const useTipsStore = defineStore('tips', () => {
     updateFilters,
     tips,
     parsedTips,
-    loading
+    loading,
+    filters,
+    balance
   }
 })
