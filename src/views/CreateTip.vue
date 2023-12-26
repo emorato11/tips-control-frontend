@@ -7,7 +7,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { mdiDeleteOutline, mdiPlus } from '@mdi/js'
 import type { Selection, CreateTip } from '@/types/Tip'
 import { Status } from '@/types/Common'
-import { useTipsStore } from '@/stores/tips'
+import { useTipsStore } from '@/stores'
 
 const tipsStore = useTipsStore()
 

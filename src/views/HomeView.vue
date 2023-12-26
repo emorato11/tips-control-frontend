@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
-import { useTipsStore } from '@/stores/tips'
+import { useTipsStore } from '@/stores'
 import { DateFilterType, Status } from '@/types/Common'
 import type { Filters } from '@/types/Filters'
 import { parseNumberToCurrency } from '@/utils/currency'
