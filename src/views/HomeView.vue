@@ -68,7 +68,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <v-container class="mb-6">
+  <v-container>
     <v-data-iterator :items="parsedTips" item-value="name" :items-per-page="6" :search="search">
       <template #header>
         <HomeFilters

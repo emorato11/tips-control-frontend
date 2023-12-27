@@ -1,5 +1,4 @@
-import { Status } from './Common'
-import { SPORTS_COLORS } from './SportsColor'
+import { SportsAssets, Status } from './Common'
 
 export interface Selection {
   id?: string
@@ -19,7 +18,7 @@ export interface Tip {
   selections: Selection[]
 }
 
-export interface TipResume {
+export interface TipResume extends SportsAssets {
   id: string
   name: string
   potentialReturn: number
@@ -28,8 +27,6 @@ export interface TipResume {
   tipster: string
   type: string
   selections: Selection[]
-  icon: string
-  color: SPORTS_COLORS
   date: string
 }
 
