@@ -2,6 +2,12 @@
 import { computed, ref } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+
+import type { Tipster } from '@/types/Tipster'
+
+interface HomeFiltersProps {
+  tipsters: Tipster[]
+}
 import {
   CUSTOM_LONG_DATE_FORMAT,
   CUSTOM_SHORT_DATE_FORMAT,
@@ -10,9 +16,7 @@ import {
 } from '@/utils/date'
 import type { Filters } from '@/types/Filters'
 
-// const props = defineProps({
-//   date: Date
-// })
+const props = defineProps<HomeFiltersProps>()
 
 enum DateFilterType {
   SINGLE = 'single',
@@ -119,8 +123,8 @@ const updateTipsterFilter = () => {
         clearable
         class="flex-fill"
         label="Filtro de Tipster"
-        :items="['Tipster Apuesta', 'BetInsider']"
-        item-title="state"
+        :items="props.tipsters"
+        item-title="name"
         item-value="value"
         variant="outlined"
         @update:modelValue="updateTipsterFilter"

@@ -14,8 +14,11 @@ import {
   isSameMonth,
   isSameYear
 } from '@/utils/date'
+import { useTipstersStore } from '@/stores/tipsters'
 
 const tipsStore = useTipsStore()
+const tipstersStore = useTipstersStore()
+
 const { getAllTips, updateFilters } = tipsStore
 
 const search = ref('')
@@ -24,6 +27,8 @@ const dateFilterType = ref()
 const parsedTips = computed(() => tipsStore.parsedTips)
 const dateFilters = computed(() => tipsStore.filters.date)
 const balance = computed(() => tipsStore.balance)
+
+const tipsters = computed(() => tipstersStore.parsedTipsters)
 
 const balanceLabel = computed(() => {
   if (dateFilters.value?.length) {
@@ -72,6 +77,7 @@ onMounted(async () => {
     <v-data-iterator :items="parsedTips" item-value="name" :items-per-page="6" :search="search">
       <template #header>
         <HomeFilters
+          :tipsters="tipsters"
           @update-filters="handleUpdateFilters"
           @update-date-type="updateDateFilterType"
         />

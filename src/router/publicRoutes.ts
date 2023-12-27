@@ -13,7 +13,7 @@ export default [
       {
         path: '/create-tip',
         name: 'create-tip',
-        component: () => import('@/views/CreateTip.vue')
+        component: () => import('@/views/CreateTipView.vue')
       },
       {
         path: '/tipsters',

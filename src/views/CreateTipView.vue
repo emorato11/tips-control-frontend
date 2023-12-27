@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -8,10 +8,13 @@ import { mdiDeleteOutline, mdiPlus } from '@mdi/js'
 import type { Selection, CreateTip } from '@/types/Tip'
 import { Status } from '@/types/Common'
 import { useTipsStore } from '@/stores'
+import { useTipstersStore } from '@/stores/tipsters'
 
 const tipsStore = useTipsStore()
+const tipstersStore = useTipstersStore()
 
 const { createTip } = tipsStore
+const { getAllTipsters } = tipstersStore
 
 const form = ref()
 const tipName = ref()
@@ -34,6 +37,7 @@ const statusOptions = ref(Object.values(Status))
 // ]
 
 const loading = computed(() => tipsStore.loading)
+const tipsters = computed(() => tipstersStore.parsedTipsters)
 
 const addNewSelection = () => {
   selections.value = [...selections.value, { name: '', status: Status.PENDING }]
@@ -78,6 +82,10 @@ const resetForm = () => {
   potentialReturn.value = null
   status.value = Status.PENDING
 }
+
+onMounted(async () => {
+  await getAllTipsters()
+})
 </script>
 
 <template>
@@ -90,7 +98,9 @@ const resetForm = () => {
             v-model="tipster"
             label="Tipster"
             :rules="[(v) => !!v || 'Requerido']"
-            :items="['Tipster Apuesta', 'BetInsider']"
+            :items="tipsters"
+            item-title="name"
+            item-value="value"
             variant="outlined"
           />
         </v-col>

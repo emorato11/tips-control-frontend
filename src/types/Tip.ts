@@ -1,4 +1,4 @@
-import { SportsAssets, Status } from './Common'
+import type { SportsAssets, Status } from './Common'
 
 export interface Selection {
   id?: string
