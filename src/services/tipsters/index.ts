@@ -20,13 +20,25 @@ export default {
     } catch (error) {
       console.log(error)
     }
+  },
+
+  async update(id: string, payload: CreateTipster) {
+    try {
+      const response = await apiInstance.patch<CreateTipster>('/tipsters/' + id, payload)
+
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  async delete(id: string) {
+    try {
+      const response = await apiInstance.delete<{ message: string }>('/tipsters/' + id)
+
+      return !!response.data.message
+    } catch (error) {
+      console.log(error)
+    }
   }
-
-  // update( id, data ){
-  //     return apiInstance.put( 'https://music.com/api/v1/songs/'+id, data );
-  // },
-
-  // delete( id ){
-  //     return apiInstance.delete( 'https://music.com/api/v1/songs/' + id )
-  // }
 }

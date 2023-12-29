@@ -7,6 +7,7 @@ import { getSportAssets } from '@/utils/tips'
 
 export const useTipstersStore = defineStore('tipsters', () => {
   const tipsters = ref<Tipster[]>([])
+  const selectedTipster = ref<Tipster>()
   const loading = ref(false)
   const filters = ref<Filters>({ date: [], tipster: '' })
 
@@ -40,12 +41,42 @@ export const useTipstersStore = defineStore('tipsters', () => {
     loading.value = false
   }
 
+  const deleteTipster = async (tipsterId: string) => {
+    loading.value = true
+    const response = await tipstersService.delete(tipsterId)
+
+    if (response) {
+      tipsters.value = tipsters.value.filter((tipster) => tipster.id !== tipsterId)
+    }
+
+    loading.value = false
+  }
+
+  const updateTipster = async (tipsterId: string, payload: CreateTipster) => {
+    loading.value = true
+    const response = await tipstersService.update(tipsterId, payload)
+
+    if (response) {
+      // tipsters.value = tipsters.value.filter((tipster) => tipster.id !== tipsterId)
+    }
+
+    loading.value = false
+  }
+
+  const selectTipster = (tipsterId: string) => {
+    selectedTipster.value = tipsters.value.find((tipster) => tipster.id === tipsterId)
+  }
+
   const updateFilters = (filt: Filters) => (filters.value = { ...filters.value, ...filt })
 
   return {
     getAllTipsters,
     createTipster,
     updateFilters,
+    deleteTipster,
+    selectTipster,
+    updateTipster,
+    selectedTipster,
     tipsters,
     parsedTipsters,
     loading,

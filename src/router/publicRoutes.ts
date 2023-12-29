@@ -20,13 +20,6 @@ export default [
         path: 'tipsters',
         name: 'tipsters',
         component: () => import('@/views/TipstersView.vue')
-        // children: [
-        //   {
-        //     path: ':id',
-        //     name: 'tipster-detail',
-        //     component: TipsterDetailsView
-        //   }
-        // ]
       },
       {
         path: 'tipsters/:id',
