@@ -1,3 +1,4 @@
+import TipsterDetailsView from '@/views/TipsterDetailsView.vue'
 export default [
   {
     path: '/',
@@ -6,22 +7,31 @@ export default [
     redirect: '/home',
     children: [
       {
-        path: '/home',
+        path: 'home',
         name: 'home',
         component: () => import('@/views/HomeView.vue')
       },
       {
-        path: '/create-tip',
+        path: 'create-tip',
         name: 'create-tip',
         component: () => import('@/views/CreateTipView.vue')
       },
       {
-        path: '/tipsters',
+        path: 'tipsters',
         name: 'tipsters',
-        // route level code-splitting
-        // this generates a separate chunk (About.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import('@/views/TipstersView.vue')
+        // children: [
+        //   {
+        //     path: ':id',
+        //     name: 'tipster-detail',
+        //     component: TipsterDetailsView
+        //   }
+        // ]
+      },
+      {
+        path: 'tipsters/:id',
+        name: 'tipster-detail',
+        component: TipsterDetailsView
       }
     ]
   }

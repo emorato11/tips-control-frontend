@@ -13,7 +13,7 @@ const items = ref([
 ])
 
 const goTo = (route: string) => {
-  router.push(route)
+  router.push({ name: route })
 }
 </script>
 

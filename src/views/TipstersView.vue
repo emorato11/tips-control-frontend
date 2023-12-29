@@ -1,52 +1,35 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
+import { mdiArrowLeft, mdiArrowRight, mdiDeleteOutline, mdiLeadPencil } from '@mdi/js'
+
+import TipsterForm from '@/components/TipsterForm.vue'
 
 import { useTipstersStore } from '@/stores/tipsters'
 import type { CreateTipster } from '@/types/Tipster'
-
-import { SPORTS_SELECTIONS } from '@/utils/sports'
+import { useRouter } from 'vue-router'
 
 const tipstersStore = useTipstersStore()
+const router = useRouter()
 
-const { getAllTipsters, createTipster } = tipstersStore
-const form = ref()
+const { getAllTipsters, createTipster, deleteTipster, selectTipster } = tipstersStore
 
 const tab = ref()
 const search = ref()
 
-const name = ref()
-const type = ref()
-const description = ref()
-
 const parsedTipsters = computed(() => tipstersStore.parsedTipsters)
 const loading = computed(() => tipstersStore.loading)
 
-const handleSubmit = async () => {
-  const { valid } = await form.value.validate()
-
-  if (valid) {
-    console.log('sigo')
-    await handleCreateTipster()
-  }
-}
-
-const handleCreateTipster = async () => {
-  const payload: CreateTipster = {
-    name: name.value,
-    type: type.value,
-    description: description.value
-  }
-
+const handleCreateTipster = async (payload: CreateTipster) => {
   await createTipster(payload)
-
-  resetForm()
 }
 
-const resetForm = () => {
-  name.value = null
-  type.value = null
-  description.value = null
+const removeTipster = async (id: string) => {
+  await deleteTipster(id)
+}
+const updateTipster = async (id: string) => {
+  selectTipster(id)
+
+  router.push({ name: 'tipster-detail', params: { id } })
 }
 
 onMounted(async () => {
@@ -104,8 +87,29 @@ onMounted(async () => {
 
                     <v-divider></v-divider>
 
-                    <v-card-text>
+                    <v-card-text class="d-flex justify-space-between align-center">
                       <span class="font-weight-500">{{ item.raw.description }}</span>
+                      <div class="d-flex ga-2">
+                        <v-btn
+                          class="align-self-center"
+                          elevation="4"
+                          variant="outlined"
+                          size="small"
+                          color="orange"
+                          :icon="mdiLeadPencil"
+                          @click="updateTipster(item.raw.id)"
+                        />
+
+                        <v-btn
+                          class="align-self-center"
+                          elevation="4"
+                          variant="outlined"
+                          size="small"
+                          color="error"
+                          :icon="mdiDeleteOutline"
+                          @click="removeTipster(item.raw.id)"
+                        />
+                      </div>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -140,56 +144,7 @@ onMounted(async () => {
       </v-window-item>
 
       <v-window-item value="create">
-        <v-form @submit.prevent="handleSubmit" ref="form">
-          <v-container>
-            <v-row dense>
-              <v-col cols="12" lg="6" md="6" sm="6">
-                <v-text-field
-                  v-model="name"
-                  :rules="[(v) => !!v || 'Requerido']"
-                  label="Nombre"
-                  variant="outlined"
-                />
-              </v-col>
-              <v-col cols="12" lg="6" md="6" sm="6">
-                <v-select
-                  v-model="type"
-                  :items="SPORTS_SELECTIONS"
-                  :rules="[(v) => !!v || 'Requerido']"
-                  label="Deporte"
-                  variant="outlined"
-                  required
-                  item-title="name"
-                  item-value="value"
-                />
-              </v-col>
-            </v-row>
-
-            <v-row dense>
-              <v-col cols="12">
-                <v-textarea
-                  v-model="description"
-                  label="Descripcion"
-                  auto-grow
-                  variant="outlined"
-                  rows="1"
-                  row-height="15"
-                />
-              </v-col>
-            </v-row>
-
-            <v-btn
-              type="submit"
-              block
-              class="mt-2"
-              :loading="loading"
-              variant="elevated"
-              color="primary"
-            >
-              Submit
-            </v-btn>
-          </v-container>
-        </v-form>
+        <TipsterForm :loading="loading" @submit-form="handleCreateTipster" />
       </v-window-item>
     </v-window>
   </v-container>
