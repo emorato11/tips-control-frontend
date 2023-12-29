@@ -91,12 +91,12 @@ onMounted(async () => {
 <template>
   <v-form @submit.prevent="handleSubmit" ref="form">
     <v-container>
-      <span class="mb-4 text-center text-h4 w-100 d-block">Crear Tip</span>
+      <span class="mb-4 text-center text-body-1 w-100 d-block">Crear Dato</span>
       <v-row dense class="mb-4">
         <v-col cols="12" lg="4" md="4" sm="6">
           <v-autocomplete
             v-model="tipster"
-            label="Tipster"
+            label="Tipo"
             :rules="[(v) => !!v || 'Requerido']"
             :items="tipsters"
             item-title="name"
@@ -116,7 +116,7 @@ onMounted(async () => {
           <v-text-field
             v-model="tipName"
             :rules="[(v) => !!v || 'Requerido']"
-            label="Nombre del tip"
+            label="Nombre del dato"
             variant="outlined"
           ></v-text-field>
         </v-col>

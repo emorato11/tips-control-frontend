@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
+import { mdiArrowLeft, mdiArrowRight, mdiLeadPencil, mdiDeleteOutline } from '@mdi/js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
 import { useTipsStore } from '@/stores'
@@ -161,7 +161,7 @@ onMounted(async () => {
                   </div>
                 </v-card-text>
 
-                <div class="px-4">
+                <div class="d-flex ga-2 px-4">
                   <v-switch
                     :model-value="isExpanded(item as any)"
                     :label="`${isExpanded(item as any) ? 'Ocultar' : 'Mostrar'} selecciones`"
@@ -169,6 +169,24 @@ onMounted(async () => {
                     inset
                     @click="() => toggleExpand(item as any)"
                   ></v-switch>
+
+                  <v-btn
+                    class="align-self-center"
+                    elevation="4"
+                    variant="outlined"
+                    size="small"
+                    color="orange"
+                    :icon="mdiLeadPencil"
+                  />
+
+                  <v-btn
+                    class="align-self-center"
+                    elevation="4"
+                    variant="outlined"
+                    size="small"
+                    color="error"
+                    :icon="mdiDeleteOutline"
+                  />
                 </div>
 
                 <v-divider></v-divider>

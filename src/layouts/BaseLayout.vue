@@ -8,8 +8,8 @@ const router = useRouter()
 const drawer = ref(false)
 const items = ref([
   { text: 'Home', icon: mdiFolder, redirect: 'home' },
-  { text: 'Crear Tip', icon: mdiAccountMultiple, redirect: 'create-tip' },
-  { text: 'Tipsters', icon: mdiStar, redirect: 'tipsters' }
+  { text: 'Crear Dato', icon: mdiAccountMultiple, redirect: 'create-tip' },
+  { text: 'Tipos', icon: mdiStar, redirect: 'tipsters' }
 ])
 
 const goTo = (route: string) => {
@@ -24,7 +24,7 @@ const goTo = (route: string) => {
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
       </template>
 
-      <v-app-bar-title>Tipster control app</v-app-bar-title>
+      <v-app-bar-title>Test APP</v-app-bar-title>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" location="left" temporary>
       <v-list :lines="false" density="compact" nav>
