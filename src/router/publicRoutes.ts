@@ -12,6 +12,11 @@ export default [
         component: () => import('@/views/HomeView.vue')
       },
       {
+        path: 'tips/:id',
+        name: 'tip-details',
+        component: () => import('@/views/TipDetailsView.vue')
+      },
+      {
         path: 'create-tip',
         name: 'create-tip',
         component: () => import('@/views/CreateTipView.vue')

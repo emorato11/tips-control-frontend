@@ -10,6 +10,8 @@ import { Status } from '@/types/Common'
 export const useTipsStore = defineStore('tips', () => {
   const tips = ref<Tip[]>()
   const loading = ref(false)
+  const selectedTip = ref<Tip>()
+
   const filters = ref<Filters>({ date: [], tipster: '' })
 
   const parsedTips = computed<TipResume[]>(() => {
@@ -75,14 +77,44 @@ export const useTipsStore = defineStore('tips', () => {
 
   const updateFilters = (filt: Filters) => (filters.value = { ...filters.value, ...filt })
 
+  const selectTip = (tipId: string) => {
+    selectedTip.value = tips.value?.find((tip) => tip.id === tipId)
+  }
+
+  const deleteTip = async (tipsterId: string) => {
+    loading.value = true
+    const response = await tipsService.delete(tipsterId)
+
+    if (response) {
+      tips.value = tips.value?.filter((tipster) => tipster.id !== tipsterId)
+    }
+
+    loading.value = false
+  }
+
+  const updateTip = async (tipsterId: string, payload: CreateTip) => {
+    loading.value = true
+    const response = await tipsService.update(tipsterId, payload)
+
+    if (response) {
+      // tips.value = tips.value.filter((tipster) => tipster.id !== tipsterId)
+    }
+
+    loading.value = false
+  }
+
   return {
     getAllTips,
     createTip,
     updateFilters,
+    selectTip,
+    updateTip,
+    deleteTip,
     tips,
     parsedTips,
     loading,
     filters,
-    balance
+    balance,
+    selectedTip
   }
 })

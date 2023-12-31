@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
-import { mdiArrowLeft, mdiArrowRight } from '@mdi/js'
+import { mdiArrowLeft, mdiArrowRight, mdiLeadPencil, mdiDeleteOutline } from '@mdi/js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
 import { useTipsStore } from '@/stores'
@@ -18,8 +19,10 @@ import { useTipstersStore } from '@/stores/tipsters'
 
 const tipsStore = useTipsStore()
 const tipstersStore = useTipstersStore()
+const router = useRouter()
 
-const { getAllTips, updateFilters } = tipsStore
+const { getAllTips, updateFilters, deleteTip, selectTip } = tipsStore
+const { getAllTipsters } = tipstersStore
 
 const search = ref('')
 const dateFilterType = ref()
@@ -68,13 +71,30 @@ const updateDateFilterType = (filterType: DateFilterType) => {
   dateFilterType.value = filterType
 }
 
+const handleRemoveTip = async (id: string) => {
+  await deleteTip(id)
+}
+const handleUpdateTip = async (id: string) => {
+  selectTip(id)
+
+  router.push({ name: 'tip-details', params: { id } })
+}
+
+const getCardColor = (status: Status) => {
+  if (Status.PENDING === status) return 'orange'
+  if (Status.FAILED === status) return 'error'
+
+  return 'success'
+}
+
 onMounted(async () => {
   await getAllTips()
+  await getAllTipsters()
 })
 </script>
 <template>
   <v-container>
-    <v-data-iterator :items="parsedTips" item-value="name" :items-per-page="6" :search="search">
+    <v-data-iterator :items="parsedTips" item-value="name" :items-per-page="12" :search="search">
       <template #header>
         <HomeFilters
           :tipsters="tipsters"
@@ -120,7 +140,7 @@ onMounted(async () => {
               sm="6"
               class="w-100"
             >
-              <v-card border flat>
+              <v-card border flat variant="outlined" :color="getCardColor(item.raw.status)">
                 <v-card-title class="d-flex align-center justify-start ga-1">
                   <v-icon :color="item.raw.color" :icon="item.raw.icon" start size="18"></v-icon>
 
@@ -161,7 +181,7 @@ onMounted(async () => {
                   </div>
                 </v-card-text>
 
-                <div class="px-4">
+                <div class="d-flex ga-2 px-4">
                   <v-switch
                     :model-value="isExpanded(item as any)"
                     :label="`${isExpanded(item as any) ? 'Ocultar' : 'Mostrar'} selecciones`"
@@ -169,6 +189,26 @@ onMounted(async () => {
                     inset
                     @click="() => toggleExpand(item as any)"
                   ></v-switch>
+
+                  <v-btn
+                    class="align-self-center"
+                    elevation="4"
+                    variant="outlined"
+                    size="small"
+                    color="orange"
+                    :icon="mdiLeadPencil"
+                    @click="handleUpdateTip(item.raw.id)"
+                  />
+
+                  <v-btn
+                    class="align-self-center"
+                    elevation="4"
+                    variant="outlined"
+                    size="small"
+                    color="error"
+                    :icon="mdiDeleteOutline"
+                    @click="handleRemoveTip(item.raw.id)"
+                  />
                 </div>
 
                 <v-divider></v-divider>
