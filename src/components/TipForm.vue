@@ -6,6 +6,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 
 import { Status } from '@/types/Common'
 import type { Selection, CreateTip } from '@/types/Tip'
+import { SPORTS_SELECTIONS } from '@/utils/sports'
 import type { Tipster } from '@/types/Tipster'
 
 interface TipFormProps {
@@ -51,7 +52,7 @@ const handleCreateTip = async () => {
     potentialReturn: potentialReturn.value,
     spent: spent.value,
     status: status.value,
-    type: 'football',
+    type: type.value,
     selections: selections.value
   }
 
@@ -125,7 +126,19 @@ onMounted(() => {
           ></v-text-field>
         </v-col>
 
-        <!-- <v-row dense> -->
+        <v-col cols="12" lg="4" md="4" sm="6">
+          <v-select
+            v-model="type"
+            :items="SPORTS_SELECTIONS"
+            :rules="[(v) => !!v || 'Requerido']"
+            label="Deporte"
+            variant="outlined"
+            required
+            item-title="name"
+            item-value="value"
+          />
+        </v-col>
+
         <v-col cols="12" lg="4" md="4" sm="6">
           <v-select
             v-model="status"
@@ -159,7 +172,7 @@ onMounted(() => {
       </v-row>
 
       <div class="d-flex flex-column py-4">
-        <span class="text-center text-h5 text-center mb-4">Selecciones</span>
+        <span class="text-center text-h6 text-center mb-4">Selecciones</span>
 
         <v-row dense v-for="(selection, idx) in selections" :key="idx" class="justify-center">
           <v-col cols="5">

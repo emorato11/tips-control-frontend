@@ -2,8 +2,10 @@
 import { useRouter } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 import { mdiArrowLeft, mdiArrowRight, mdiLeadPencil, mdiDeleteOutline } from '@mdi/js'
+import type { ChartData } from 'chart.js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
+import GraphicBar from '@/components/GraphicBar.vue'
 import { useTipsStore } from '@/stores'
 import { DateFilterType, Status } from '@/types/Common'
 import type { Filters } from '@/types/Filters'
@@ -16,6 +18,8 @@ import {
   isSameYear
 } from '@/utils/date'
 import { useTipstersStore } from '@/stores/tipsters'
+import { getRandomColor } from '@/utils/sports'
+import { roundDecimals } from '@/utils/number'
 
 const tipsStore = useTipsStore()
 const tipstersStore = useTipstersStore()
@@ -29,6 +33,7 @@ const dateFilterType = ref()
 
 const parsedTips = computed(() => tipsStore.parsedTips)
 const dateFilters = computed(() => tipsStore.filters.date)
+const tipsterFilter = computed(() => tipsStore.filters.tipster)
 const balance = computed(() => tipsStore.balance)
 
 const tipsters = computed(() => tipstersStore.parsedTipsters)
@@ -55,6 +60,70 @@ const balanceLabel = computed(() => {
   }
 
   return 'Total'
+})
+
+const loading = computed(() => tipstersStore.loading || tipsStore.loading)
+
+const wonTips = computed(() => parsedTips.value.filter((tip) => tip.status === Status.WON).length)
+const failedTips = computed(
+  () => parsedTips.value.filter((tip) => tip.status === Status.FAILED).length
+)
+const pendingTips = computed(
+  () => parsedTips.value.filter((tip) => tip.status === Status.PENDING).length
+)
+
+const wonPercentaje = computed(() => {
+  return roundDecimals((wonTips.value / parsedTips.value.length) * 100)
+})
+
+const graphicData = computed<ChartData<'line'>>(() => {
+  const test = parsedTips.value.reduce((accum: { date: string; quantity: number }[], current) => {
+    const date: string = getParsedDate(current.date, {}, 'az')
+
+    const quantity =
+      current.status === Status.WON
+        ? current.potentialReturn - current.spent
+        : current.status === Status.PENDING
+          ? 0
+          : current.spent * -1
+
+    if (!accum.find((element) => element.date === date)) {
+      accum = [{ date, quantity }, ...accum]
+    } else {
+      const idx = accum.findIndex((element) => element.date === date)
+
+      accum[idx].quantity += roundDecimals(quantity)
+    }
+
+    return accum
+  }, [])
+
+  const labels = test.map((element) => element.date)
+  const datasetData = test
+    .map((element) => element.quantity)
+    .reduce((accum: number[], curr: number, idx) => {
+      if (idx === 0) {
+        accum = [curr]
+      } else {
+        accum = [...accum, accum[idx - 1] + curr]
+      }
+
+      return accum
+    }, [])
+
+  return {
+    labels,
+    datasets: [
+      {
+        label: tipsterFilter.value || 'Total',
+        backgroundColor: getRandomColor(),
+        borderColor: getRandomColor(),
+        pointBackgroundColor: getRandomColor(),
+        data: datasetData,
+        tension: 0.25
+      }
+    ]
+  }
 })
 
 const getStatusColor = (status: Status) => {
@@ -94,7 +163,14 @@ onMounted(async () => {
 </script>
 <template>
   <v-container>
-    <v-data-iterator :items="parsedTips" item-value="name" :items-per-page="12" :search="search">
+    <v-data-iterator
+      :items="parsedTips"
+      item-value="name"
+      :loading="loading"
+      :items-per-page="12"
+      :search="search"
+    >
+      <template #no-data> Cargando </template>
       <template #header>
         <HomeFilters
           :tipsters="tipsters"
@@ -103,17 +179,21 @@ onMounted(async () => {
         />
 
         <v-card class="mb-4 pa-0" variant="tonal" color="primary">
-          <v-card-title variant="tonal" color="primary" class="text-body-2 text-wrap">
+          <GraphicBar v-if="graphicData?.datasets" :data="graphicData" />
+        </v-card>
+
+        <v-card class="mb-4 pa-0" variant="tonal" color="primary">
+          <v-card-title variant="tonal" color="primary" class="text-body-2 text-wrap pb-0">
             {{ balanceLabel }}
           </v-card-title>
           <v-row dense class="py-2 px-4">
-            <v-col cols="6">
+            <v-col cols="6" lg="3" md="4">
               <p>
-                Total Invertido:
+                Invertido:
                 <span class="font-weight-bold">{{ parseNumberToCurrency(balance.spent) }}</span>
               </p>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="6" lg="3" md="4">
               <p>
                 Balance:
                 <span
@@ -121,6 +201,40 @@ onMounted(async () => {
                   class="font-weight-bold"
                 >
                   {{ parseNumberToCurrency(balance.potentialReturn) }}</span
+                >
+              </p>
+            </v-col>
+            <v-col cols="6" lg="3" md="4">
+              <p>
+                Total tips:
+                <span class="font-weight-bold">{{ parsedTips.length }}</span>
+              </p>
+            </v-col>
+            <v-col cols="6" lg="3" md="4">
+              <p class="text-success">
+                Ganados:
+                <span class="font-weight-bold">{{ wonTips }}</span>
+              </p>
+            </v-col>
+            <v-col cols="6" lg="3" md="4">
+              <p class="text-error">
+                Perdidos:
+                <span class="font-weight-bold">{{ failedTips }}</span>
+              </p>
+            </v-col>
+            <v-col cols="6" lg="3" md="4">
+              <p class="text-orange">
+                Pendientes:
+                <span class="font-weight-bold">{{ pendingTips }}</span>
+              </p>
+            </v-col>
+            <v-col cols="6" lg="3" md="4">
+              <p>
+                Porcentaje:
+                <span
+                  class="font-weight-bold"
+                  :class="wonPercentaje >= 50 ? 'text-success' : 'text-error'"
+                  >{{ wonPercentaje }}%</span
                 >
               </p>
             </v-col>
@@ -148,7 +262,9 @@ onMounted(async () => {
                     item.raw.name
                   }}</span>
 
-                  <span class="ml-auto text-body-2 font-weight-thin">{{ item.raw.date }}</span>
+                  <span class="ml-auto text-body-2 font-weight-thin">{{
+                    item.raw.parsedDate
+                  }}</span>
                 </v-card-title>
 
                 <v-divider></v-divider>

@@ -37,7 +37,7 @@ export const useTipsStore = defineStore('tips', () => {
       return {
         ...tip,
         ...getSportAssets(tip.type),
-        date: getParsedDate(tip.date, CUSTOM_SHORT_DATE_FORMAT)
+        parsedDate: getParsedDate(tip.date, CUSTOM_SHORT_DATE_FORMAT)
       }
     })
   })

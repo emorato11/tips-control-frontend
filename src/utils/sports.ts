@@ -8,3 +8,5 @@ export const SPORTS_SELECTIONS: Sport[] = [
   { name: 'Voleibol', value: Sports.VOLLEY },
   { name: 'Multideporte', value: Sports.MULTI }
 ]
+
+export const getRandomColor = () => `#${Math.floor(Math.random() * 16777215).toString(16)}`

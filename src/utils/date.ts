@@ -3,31 +3,31 @@ import { DateFilterType } from '@/types/Common'
 export const MILLISECONDS_TO_SECONDS = 1000
 export const DAY_SECONDS = 3600
 
-export const CUSTOM_SHORT_DATE_FORMAT = {
+export const CUSTOM_SHORT_DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: 'numeric',
   month: 'short'
 }
 
-export const CUSTOM_SHORT_DATE_FORMAT_WITH_YEAR = {
+export const CUSTOM_SHORT_DATE_FORMAT_WITH_YEAR: Intl.DateTimeFormatOptions = {
   day: 'numeric',
   month: 'short',
   year: 'numeric'
 }
 
-export const CUSTOM_LONG_DATE_FORMAT = {
+export const CUSTOM_LONG_DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: 'numeric',
   month: 'long'
 }
 
-export const CUSTOM_LONG_DATE_FORMAT_WITH_YEAR = {
+export const CUSTOM_LONG_DATE_FORMAT_WITH_YEAR: Intl.DateTimeFormatOptions = {
   day: 'numeric',
   month: 'long',
   year: 'numeric'
 }
 
-export const getParsedDate = (date: Date, options = {}) => {
+export const getParsedDate = (date: Date, options: Intl.DateTimeFormatOptions, language = 'es') => {
   const jsDate = new Date(date)
-  return new Intl.DateTimeFormat('es', options).format(jsDate)
+  return new Intl.DateTimeFormat(language, options).format(jsDate)
 }
 
 export const createDatesForFilter = (dates: Date | Date[], filterType: DateFilterType) => {

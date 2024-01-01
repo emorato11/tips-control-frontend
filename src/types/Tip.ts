@@ -27,7 +27,8 @@ export interface TipResume extends SportsAssets {
   tipster: string
   type: string
   selections: Selection[]
-  date: string
+  date: Date
+  parsedDate: string
 }
 
 export type Balance = Pick<Tip, 'spent' | 'potentialReturn'>
