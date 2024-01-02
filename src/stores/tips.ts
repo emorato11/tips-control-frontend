@@ -44,8 +44,10 @@ export const useTipsStore = defineStore('tips', () => {
 
   const balance = computed<Balance>(() => {
     return parsedTips.value.reduce(
-      (accum: { spent: number; potentialReturn: number }, current: TipResume) => {
+      (accum: { spent: number; potentialReturn: number; pending: number }, current: TipResume) => {
         accum.spent = accum.spent + current.spent
+
+        if (current.status === Status.PENDING) accum.pending += current.spent
 
         const quantityToConcat =
           current.status === Status.WON
@@ -57,7 +59,7 @@ export const useTipsStore = defineStore('tips', () => {
         accum.potentialReturn = accum.potentialReturn + quantityToConcat
         return accum
       },
-      { spent: 0, potentialReturn: 0 }
+      { spent: 0, potentialReturn: 0, pending: 0 }
     )
   })
 

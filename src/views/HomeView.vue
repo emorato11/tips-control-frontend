@@ -170,7 +170,9 @@ onMounted(async () => {
       :items-per-page="12"
       :search="search"
     >
-      <template #no-data> Cargando </template>
+      <template #no-data>
+        <v-container> No hay tips</v-container>
+      </template>
       <template #header>
         <HomeFilters
           :tipsters="tipsters"
@@ -195,12 +197,20 @@ onMounted(async () => {
             </v-col>
             <v-col cols="6" lg="3" md="4">
               <p>
-                Balance:
+                Balance +/-:
                 <span
                   :class="balance.potentialReturn >= 0 ? 'text-success' : 'text-error'"
                   class="font-weight-bold"
                 >
                   {{ parseNumberToCurrency(balance.potentialReturn) }}</span
+                >
+              </p>
+            </v-col>
+            <v-col cols="6" lg="3" md="4">
+              <p>
+                Balance pendiente:
+                <span class="font-weight-bold text-orange">
+                  {{ parseNumberToCurrency(balance.pending) }}</span
                 >
               </p>
             </v-col>

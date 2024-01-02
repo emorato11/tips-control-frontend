@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -29,6 +29,7 @@ const emit = defineEmits<{
   (e: 'updateDateType', value: DateFilterType): void
 }>()
 
+const datepicker = ref()
 const date = ref<Date | Date[]>()
 const selectedDateFilter = ref()
 const selectedTipsterFilter = ref()
@@ -42,8 +43,6 @@ const dateFilterOptions = ref([
 const enabledMonthPicker = ref(false)
 const enabledRangePicker = ref(false)
 const enabledWeekPicker = ref(false)
-
-const enabledCalendar = computed(() => selectedDateFilter.value)
 
 const updateCalendarMode = () => {
   if (selectedDateFilter.value === DateFilterType.RANGE) {
@@ -64,6 +63,8 @@ const updateCalendarMode = () => {
     enabledWeekPicker.value = false
   }
   emit('updateDateType', selectedDateFilter.value)
+
+  datepicker.value.openMenu()
 }
 
 const format = (dates: Date | Date[]) => {
@@ -105,13 +106,13 @@ const updateTipsterFilter = () => {
     </v-col>
     <v-col cols="6" lg="4" md="4" sm="6">
       <VueDatePicker
+        ref="datepicker"
         v-model="date"
         class="datepicker w-auto"
         :enable-time-picker="true"
         :month-picker="enabledMonthPicker"
         :range="enabledRangePicker"
         :week-picker="enabledWeekPicker"
-        :disabled="!enabledCalendar"
         :format="format"
         @update:model-value="updateDateFilters"
         auto-apply
