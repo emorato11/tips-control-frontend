@@ -52,7 +52,7 @@ export const useTipsStore = defineStore('tips', () => {
         const quantityToConcat =
           current.status === Status.WON
             ? current.potentialReturn - current.spent
-            : current.status === Status.PENDING
+            : current.status === Status.PENDING || current.status === Status.CANCELED
               ? 0
               : current.spent * -1
 

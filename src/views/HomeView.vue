@@ -30,6 +30,8 @@ const { getAllTipsters } = tipstersStore
 
 const search = ref('')
 const dateFilterType = ref()
+const datasetBorderColor = ref(getRandomColor())
+const datasetPointBackgroundColor = ref(getRandomColor())
 
 const parsedTips = computed(() => tipsStore.parsedTips)
 const dateFilters = computed(() => tipsStore.filters.date)
@@ -65,6 +67,9 @@ const balanceLabel = computed(() => {
 const loading = computed(() => tipstersStore.loading || tipsStore.loading)
 
 const wonTips = computed(() => parsedTips.value.filter((tip) => tip.status === Status.WON).length)
+const canceledTips = computed(
+  () => parsedTips.value.filter((tip) => tip.status === Status.CANCELED).length
+)
 const failedTips = computed(
   () => parsedTips.value.filter((tip) => tip.status === Status.FAILED).length
 )
@@ -83,7 +88,7 @@ const graphicData = computed<ChartData<'line'>>(() => {
     const quantity =
       current.status === Status.WON
         ? current.potentialReturn - current.spent
-        : current.status === Status.PENDING
+        : current.status === Status.PENDING || current.status === Status.CANCELED
           ? 0
           : current.spent * -1
 
@@ -116,19 +121,20 @@ const graphicData = computed<ChartData<'line'>>(() => {
     datasets: [
       {
         label: tipsterFilter.value || 'Total',
-        backgroundColor: getRandomColor(),
-        borderColor: getRandomColor(),
-        pointBackgroundColor: getRandomColor(),
+        borderColor: datasetBorderColor.value,
+        pointBackgroundColor: datasetPointBackgroundColor.value,
         data: datasetData,
-        tension: 0.25
+        tension: 0.25,
+        pointRadius: 5
       }
     ]
   }
 })
 
-const getStatusColor = (status: Status) => {
+const getColorByStatus = (status: Status) => {
   if (status === Status.PENDING) return 'orange'
   if (status === Status.FAILED) return 'error'
+  if (status === Status.CANCELED) return 'grey'
   return 'success'
 }
 
@@ -147,13 +153,6 @@ const handleUpdateTip = async (id: string) => {
   selectTip(id)
 
   router.push({ name: 'tip-details', params: { id } })
-}
-
-const getCardColor = (status: Status) => {
-  if (Status.PENDING === status) return 'orange'
-  if (Status.FAILED === status) return 'error'
-
-  return 'success'
 }
 
 onMounted(async () => {
@@ -239,6 +238,12 @@ onMounted(async () => {
               </p>
             </v-col>
             <v-col cols="6" lg="3" md="4">
+              <p class="text-grey">
+                Cancelados:
+                <span class="font-weight-bold">{{ canceledTips }}</span>
+              </p>
+            </v-col>
+            <v-col cols="6" lg="3" md="4">
               <p>
                 Porcentaje:
                 <span
@@ -264,7 +269,7 @@ onMounted(async () => {
               sm="6"
               class="w-100"
             >
-              <v-card border flat variant="outlined" :color="getCardColor(item.raw.status)">
+              <v-card border flat variant="outlined" :color="getColorByStatus(item.raw.status)">
                 <v-card-title class="d-flex align-center justify-start ga-1">
                   <v-icon :color="item.raw.color" :icon="item.raw.icon" start size="18"></v-icon>
 
@@ -283,7 +288,7 @@ onMounted(async () => {
                   <div class="d-flex justify-space-between">
                     <v-chip color="primary" variant="tonal"> {{ item.raw.tipster }} </v-chip>
                     <v-chip
-                      :color="getStatusColor(item.raw.status)"
+                      :color="getColorByStatus(item.raw.status)"
                       variant="tonal"
                       class="text-capitalize"
                     >
@@ -346,7 +351,7 @@ onMounted(async () => {
                         <div class="d-flex justify-space-between align-center">
                           <span class="text-body-2 font-weight-bold">{{ selection.name }}</span>
                           <v-chip
-                            :color="getStatusColor(selection.status)"
+                            :color="getColorByStatus(selection.status)"
                             variant="tonal"
                             class="text-capitalize"
                           >

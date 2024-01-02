@@ -8,7 +8,8 @@ export interface SportsAssets {
 export enum Status {
   PENDING = 'pending',
   WON = 'won',
-  FAILED = 'failed'
+  FAILED = 'failed',
+  CANCELED = 'canceled'
 }
 
 export enum DateFilterType {
