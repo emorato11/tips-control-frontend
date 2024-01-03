@@ -33,6 +33,10 @@ export const useTipsStore = defineStore('tips', () => {
       filteredTips = filteredTips.filter((tip) => tip.tipster === filters.value.tipster)
     }
 
+    if (filters.value.status) {
+      filteredTips = filteredTips.filter((tip) => tip.status === filters.value.status)
+    }
+
     return filteredTips?.map((tip) => {
       return {
         ...tip,

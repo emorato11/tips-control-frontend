@@ -170,7 +170,7 @@ onMounted(async () => {
       :search="search"
     >
       <template #no-data>
-        <v-container> No hay tips</v-container>
+        <v-container> <v-skeleton-loader></v-skeleton-loader></v-container>
       </template>
       <template #header>
         <HomeFilters
@@ -196,7 +196,7 @@ onMounted(async () => {
             </v-col>
             <v-col cols="6" lg="3" md="4">
               <p>
-                Balance +/-:
+                +/-:
                 <span
                   :class="balance.potentialReturn >= 0 ? 'text-success' : 'text-error'"
                   class="font-weight-bold"
@@ -207,7 +207,7 @@ onMounted(async () => {
             </v-col>
             <v-col cols="6" lg="3" md="4">
               <p>
-                Balance pendiente:
+                Pendiente:
                 <span class="font-weight-bold text-orange">
                   {{ parseNumberToCurrency(balance.pending) }}</span
                 >
@@ -221,25 +221,25 @@ onMounted(async () => {
             </v-col>
             <v-col cols="6" lg="3" md="4">
               <p class="text-success">
-                Ganados:
+                Tips Ganados:
                 <span class="font-weight-bold">{{ wonTips }}</span>
               </p>
             </v-col>
             <v-col cols="6" lg="3" md="4">
               <p class="text-error">
-                Perdidos:
+                Tips Perdidos:
                 <span class="font-weight-bold">{{ failedTips }}</span>
               </p>
             </v-col>
             <v-col cols="6" lg="3" md="4">
               <p class="text-orange">
-                Pendientes:
+                Tips Pendientes:
                 <span class="font-weight-bold">{{ pendingTips }}</span>
               </p>
             </v-col>
             <v-col cols="6" lg="3" md="4">
               <p class="text-grey">
-                Cancelados:
+                Tips Cancelados:
                 <span class="font-weight-bold">{{ canceledTips }}</span>
               </p>
             </v-col>

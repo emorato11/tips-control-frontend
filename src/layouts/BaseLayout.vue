@@ -73,6 +73,14 @@ const logout = () => {
 
           <v-list-item-title> {{ item.text }}</v-list-item-title>
         </v-list-item>
+
+        <v-list-item color="primary" @click="logout">
+          <template #prepend>
+            <v-icon :icon="mdiLogout" color="red"></v-icon>
+          </template>
+
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-main>
