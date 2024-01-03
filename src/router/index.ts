@@ -9,14 +9,21 @@ const router = createRouter({
   routes: [...publicRoutes, ...authRoutes, { path: '/:pathMatch(.*)*', redirect: '/' }]
 })
 
-router.beforeEach(async (to) => {
-  // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/account/login']
-  const authRequired = !publicPages.includes(to.path)
+router.beforeEach(async (to, _, next) => {
   const authStore = useAuthStore()
 
-  if (authRequired && !authStore.isLogged) {
-    return '/account/login'
+  if (to.meta.requiresAuth && !authStore.isLogged) {
+    next('/login')
+  } else {
+    if (!authStore.user) {
+      authStore.getUserDetails()
+    }
+
+    if (!to.meta.requiresAuth && authStore.isLogged) {
+      next('/home')
+    } else {
+      next()
+    }
   }
 })
 

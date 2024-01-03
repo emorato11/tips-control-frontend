@@ -5,6 +5,7 @@ export default [
     name: 'Public',
     component: () => import('@/layouts/BaseLayout.vue'),
     redirect: '/home',
+    meta: { requiresAuth: true },
     children: [
       {
         path: 'home',

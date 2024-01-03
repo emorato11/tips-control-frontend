@@ -1,6 +1,8 @@
 export interface User {
   name: string
-  id: string
   lastName: string
   token: string
+  email: string
+  expirationTime: number
+  picture: string
 }
