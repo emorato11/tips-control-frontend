@@ -47,7 +47,9 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = () => {
-    console.log('Do Logout')
+    document.cookie = 'user_token='
+    token.value = undefined
+    user.value = undefined
   }
 
   return {

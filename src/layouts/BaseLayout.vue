@@ -1,32 +1,64 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { mdiFolder, mdiAccountMultiple, mdiStar } from '@mdi/js'
+import { mdiHomeAnalytics, mdiPlusBox, mdiStar, mdiLogout } from '@mdi/js'
+import { computed, ref } from 'vue'
 import { useRouter, RouterView } from 'vue-router'
+import { useDisplay } from 'vuetify'
+
+import { useAuthStore } from '@/stores'
+const { mobile } = useDisplay({ mobileBreakpoint: 720 })
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 const drawer = ref(false)
 const items = ref([
-  { text: 'Home', icon: mdiFolder, redirect: 'home' },
-  { text: 'Crear Tip', icon: mdiAccountMultiple, redirect: 'create-tip' },
+  { text: 'Home', icon: mdiHomeAnalytics, redirect: 'home' },
+  { text: 'Crear Tip', icon: mdiPlusBox, redirect: 'create-tip' },
   { text: 'Tipsters', icon: mdiStar, redirect: 'tipsters' }
 ])
 
+const fullName = computed(() => `${authStore.user?.name} ${authStore.user?.lastName}`)
+
 const goTo = (route: string) => {
   router.push({ name: route })
+}
+
+const logout = () => {
+  authStore.logout()
+  goTo('login')
 }
 </script>
 
 <template>
   <v-layout>
     <v-app-bar color="primary" density="compact" @click.stop="drawer = !drawer">
-      <template #prepend>
+      <template #prepend v-if="mobile">
         <v-app-bar-nav-icon></v-app-bar-nav-icon>
       </template>
+      <div class="d-flex ga-2 align-center" :class="{ 'px-2': mobile, 'px-6': !mobile }">
+        <p>{{ fullName }}</p>
+        <v-img :src="authStore.user?.picture" :width="40" :height="40" aspect-ratio="16/9"></v-img>
+      </div>
 
-      <v-app-bar-title>Tipster control app</v-app-bar-title>
+      <template #append v-if="!mobile">
+        <v-btn
+          v-for="(item, i) in items"
+          :key="i"
+          class="text-body-2"
+          :prepend-icon="item.icon"
+          variant="text"
+          @click="goTo(item.redirect)"
+        >
+          {{ item.text }}
+        </v-btn>
+
+        <v-btn :prepend-icon="mdiLogout" variant="text" class="text-body-2" @click="logout">
+          Logout
+        </v-btn>
+      </template>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" location="left" temporary>
+
+    <v-navigation-drawer v-if="mobile" v-model="drawer" location="top" temporary>
       <v-list :lines="false" density="compact" nav>
         <v-list-item
           v-for="(item, i) in items"

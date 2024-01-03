@@ -18,7 +18,7 @@ const callback = async (response: Record<string, string>) => {
 <template>
   <v-container class="d-flex justify-center align-center">
     <!-- <v-btn variant="elevated" color="primary" @click="handleLogin"> Login </v-btn> -->
-    <GoogleLogin :callback="callback" auto-login prompt />
+    <GoogleLogin :callback="callback" prompt />
   </v-container>
 </template>
 
