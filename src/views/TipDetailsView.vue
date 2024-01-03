@@ -28,7 +28,7 @@ onMounted(async () => {})
 </script>
 
 <template>
-  <v-container>
+  <v-container class="py-0">
     <TipForm
       :loading="loading"
       :form-values="selectedTip"

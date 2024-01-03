@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -7,6 +7,7 @@ import type { Tipster } from '@/types/Tipster'
 
 interface HomeFiltersProps {
   tipsters: Tipster[]
+  filters: Filters
 }
 import {
   CUSTOM_LONG_DATE_FORMAT,
@@ -29,7 +30,6 @@ enum DateFilterType {
 }
 const emit = defineEmits<{
   (e: 'updateFilters', value: Filters): void
-  (e: 'updateDateType', value: DateFilterType): void
 }>()
 
 const datepicker = ref()
@@ -66,7 +66,7 @@ const updateCalendarMode = () => {
     enabledRangePicker.value = false
     enabledWeekPicker.value = false
   }
-  emit('updateDateType', selectedDateFilter.value)
+  emit('updateFilters', { dateType: selectedDateFilter.value })
 
   datepicker.value.openMenu()
 }
@@ -85,8 +85,12 @@ const format = (dates: Date | Date[]) => {
   return getParsedDate(dates, CUSTOM_LONG_DATE_FORMAT)
 }
 
+const parseDates = () => {
+  return date.value ? createDatesForFilter(date.value, selectedDateFilter.value) : []
+}
+
 const updateDateFilters = () => {
-  const dates = date.value ? createDatesForFilter(date.value, selectedDateFilter.value) : []
+  const dates = parseDates()
   emit('updateFilters', { date: dates })
 }
 
@@ -97,6 +101,16 @@ const updateTipsterFilter = () => {
 const updateStatusFilter = () => {
   emit('updateFilters', { status: selectedStatusFilter.value })
 }
+
+onMounted(() => {
+  if (props.filters.tipster) selectedTipsterFilter.value = props.filters.tipster
+  if (props.filters.status) selectedStatusFilter.value = props.filters.status
+  if (props.filters.dateType) {
+    selectedDateFilter.value = props.filters.dateType
+    updateCalendarMode()
+  }
+  if (props.filters.date) date.value = props.filters.date
+})
 </script>
 <template>
   <v-row dense>
@@ -117,6 +131,7 @@ const updateStatusFilter = () => {
         ref="datepicker"
         v-model="date"
         class="datepicker w-auto"
+        placeholder="Calendario"
         :enable-time-picker="true"
         :month-picker="enabledMonthPicker"
         :range="enabledRangePicker"

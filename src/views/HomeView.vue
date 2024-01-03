@@ -29,12 +29,12 @@ const { getAllTips, updateFilters, deleteTip, selectTip } = tipsStore
 const { getAllTipsters } = tipstersStore
 
 const search = ref('')
-const dateFilterType = ref()
 const datasetBorderColor = ref(getRandomColor())
 const datasetPointBackgroundColor = ref(getRandomColor())
 
 const parsedTips = computed(() => tipsStore.parsedTips)
 const dateFilters = computed(() => tipsStore.filters.date)
+const dateTypeFilters = computed(() => tipsStore.filters.dateType)
 const tipsterFilter = computed(() => tipsStore.filters.tipster)
 const balance = computed(() => tipsStore.balance)
 
@@ -44,11 +44,11 @@ const balanceLabel = computed(() => {
   if (dateFilters.value?.length) {
     const [startDate, endDate] = dateFilters.value
 
-    if (dateFilterType.value === DateFilterType.SINGLE) {
+    if (dateTypeFilters.value === DateFilterType.SINGLE) {
       return `${getParsedDate(startDate, CUSTOM_LONG_DATE_FORMAT)}`
     }
 
-    if (dateFilterType.value === DateFilterType.MONTH) {
+    if (dateTypeFilters.value === DateFilterType.MONTH) {
       return getParsedDate(startDate, { month: 'long', year: 'numeric' })
     }
 
@@ -142,10 +142,6 @@ const handleUpdateFilters = (filters: Filters) => {
   updateFilters(filters)
 }
 
-const updateDateFilterType = (filterType: DateFilterType) => {
-  dateFilterType.value = filterType
-}
-
 const handleRemoveTip = async (id: string) => {
   await deleteTip(id)
 }
@@ -170,13 +166,13 @@ onMounted(async () => {
       :search="search"
     >
       <template #no-data>
-        <v-container> <v-skeleton-loader></v-skeleton-loader></v-container>
+        <v-skeleton-loader v-if="loading"></v-skeleton-loader>
       </template>
       <template #header>
         <HomeFilters
           :tipsters="tipsters"
+          :filters="tipsStore.filters"
           @update-filters="handleUpdateFilters"
-          @update-date-type="updateDateFilterType"
         />
 
         <v-card class="mb-4 pa-0" variant="tonal" color="primary">
