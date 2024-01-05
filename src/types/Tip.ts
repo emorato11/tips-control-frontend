@@ -1,4 +1,5 @@
 import type { SportsAssets, Status } from './Common'
+import { Sports } from './Sports'
 
 export interface Selection {
   id?: string
@@ -14,7 +15,7 @@ export interface Tip {
   spent: number
   status: Status
   tipster: string
-  type: string
+  type: Sports
   selections: Selection[]
 }
 
