@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ChartData } from 'chart.js'
+import type { ChartData, ChartOptions } from 'chart.js'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,13 +20,13 @@ interface GraphicProps {
 
 const props = defineProps<GraphicProps>()
 
-const graphicOptions = {
+const graphicOptions: ChartOptions<'line'> = {
   responsive: true,
   maintainAspectRatio: false
 }
 </script>
 <template>
-  <Line :data="props.data" :options="graphicOptions" />
+  <Line :data="props.data" :options="graphicOptions" :style="{ 'background-color': '#7fb1a8' }" />
 </template>
 
 <style scoped></style>

@@ -1,8 +1,9 @@
 export enum SPORTS_COLORS {
-  basketball = '#6EC1E4',
+  basketball = '#6CB6DB',
   tennis = '#F4A261',
-  football = '#6D4C41',
+  football = '#AC37DE',
   volleyball = '#00684A',
+  eSports = '#BF205A',
   multi = '#FFADAD',
   default = '#eeee'
 }

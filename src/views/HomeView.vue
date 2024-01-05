@@ -18,7 +18,6 @@ import {
   isSameYear
 } from '@/utils/date'
 import { useTipstersStore } from '@/stores/tipsters'
-import { getRandomColor } from '@/utils/sports'
 import { roundDecimals } from '@/utils/number'
 
 const tipsStore = useTipsStore()
@@ -29,8 +28,6 @@ const { getAllTips, updateFilters, deleteTip, selectTip } = tipsStore
 const { getAllTipsters } = tipstersStore
 
 const search = ref('')
-const datasetBorderColor = ref(getRandomColor())
-const datasetPointBackgroundColor = ref(getRandomColor())
 
 const parsedTips = computed(() => tipsStore.parsedTips)
 const dateFilters = computed(() => tipsStore.filters.date)
@@ -78,7 +75,7 @@ const pendingTips = computed(
 )
 
 const wonPercentaje = computed(() => {
-  return roundDecimals((wonTips.value / parsedTips.value.length) * 100)
+  return roundDecimals((wonTips.value / (wonTips.value + failedTips.value)) * 100)
 })
 
 const graphicData = computed<ChartData<'line'>>(() => {
@@ -121,11 +118,10 @@ const graphicData = computed<ChartData<'line'>>(() => {
     datasets: [
       {
         label: tipsterFilter.value || 'Total',
-        borderColor: datasetBorderColor.value,
-        pointBackgroundColor: datasetPointBackgroundColor.value,
+        borderColor: '#566981',
+        pointBackgroundColor: '#e0d124',
         data: datasetData,
-        tension: 0.25,
-        pointRadius: 5
+        tension: 0.25
       }
     ]
   }
