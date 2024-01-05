@@ -6,6 +6,7 @@ export const SPORTS_SELECTIONS: Sport[] = [
   { name: 'Futbol', value: Sports.FOOTBALL },
   { name: 'Baloncesto', value: Sports.BASKETBALL },
   { name: 'Voleibol', value: Sports.VOLLEY },
+  { name: 'eSports', value: Sports.ESPORTS },
   { name: 'Multideporte', value: Sports.MULTI }
 ]
 
