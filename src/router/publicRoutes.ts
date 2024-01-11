@@ -1,3 +1,4 @@
+import { RouteNames } from '@/types/Routes'
 import TipsterDetailsView from '@/views/TipsterDetailsView.vue'
 export default [
   {
@@ -9,27 +10,27 @@ export default [
     children: [
       {
         path: 'home',
-        name: 'home',
+        name: RouteNames.HOME,
         component: () => import('@/views/HomeView.vue')
       },
       {
         path: 'tips/:id',
-        name: 'tip-details',
+        name: RouteNames.TIP_DETAILS,
         component: () => import('@/views/TipDetailsView.vue')
       },
       {
         path: 'create-tip',
-        name: 'create-tip',
+        name: RouteNames.CREATE_TIP,
         component: () => import('@/views/CreateTipView.vue')
       },
       {
         path: 'tipsters',
-        name: 'tipsters',
+        name: RouteNames.TIPSTERS,
         component: () => import('@/views/TipstersView.vue')
       },
       {
         path: 'tipsters/:id',
-        name: 'tipster-detail',
+        name: RouteNames.TIPSTER_DETAILS,
         component: TipsterDetailsView
       }
     ]

@@ -7,6 +7,7 @@ import TipsterForm from '@/components/TipsterForm.vue'
 import { useTipstersStore } from '@/stores/tipsters'
 import type { CreateTipster } from '@/types/Tipster'
 import { useRouter } from 'vue-router'
+import { RouteNames } from '@/types/Routes'
 
 const tipstersStore = useTipstersStore()
 const router = useRouter()
@@ -29,7 +30,7 @@ const removeTipster = async (id: string) => {
 const updateTipster = async (id: string) => {
   selectTipster(id)
 
-  router.push({ name: 'tipster-detail', params: { id } })
+  router.push({ name: RouteNames.TIPSTER_DETAILS, params: { id } })
 }
 
 onMounted(async () => {

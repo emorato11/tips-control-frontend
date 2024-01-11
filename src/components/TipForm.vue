@@ -9,6 +9,7 @@ import type { Selection, CreateTip } from '@/types/Tip'
 import { SPORTS_SELECTIONS } from '@/utils/sports'
 import type { Tipster } from '@/types/Tipster'
 import { useRouter } from 'vue-router'
+import { RouteNames } from '@/types/Routes'
 
 interface TipFormProps {
   isEditing?: boolean
@@ -86,7 +87,7 @@ const addNewSelection = () => {
 }
 
 const goBackHome = () => {
-  router.push('home')
+  router.push(RouteNames.HOME)
 }
 
 onMounted(() => {
