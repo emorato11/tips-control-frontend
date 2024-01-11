@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
-import { mdiArrowLeft, mdiArrowRight, mdiLeadPencil, mdiDeleteOutline } from '@mdi/js'
+import { mdiArrowLeft, mdiArrowRight, mdiLeadPencil, mdiDeleteOutline, mdiPlusBox } from '@mdi/js'
 import type { ChartData } from 'chart.js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
@@ -147,6 +147,10 @@ const handleUpdateTip = async (id: string) => {
   router.push({ name: 'tip-details', params: { id } })
 }
 
+const goToCreateTip = () => {
+  router.push({ name: 'create-tip' })
+}
+
 onMounted(async () => {
   await getAllTips()
   await getAllTipsters()
@@ -171,21 +175,20 @@ onMounted(async () => {
           @update-filters="handleUpdateFilters"
         />
 
-        <v-card class="mb-4 pa-0" variant="tonal" color="primary">
+        <v-row dense class="justify-end">
+          <v-btn :prepend-icon="mdiPlusBox" color="primary" @click="goToCreateTip">Crear Tip</v-btn>
+        </v-row>
+
+        <v-card class="my-4 pa-0" variant="tonal" color="primary">
           <GraphicBar v-if="graphicData?.datasets" :data="graphicData" />
         </v-card>
+        <!-- </v-row> -->
 
         <v-card class="mb-4 pa-0" variant="tonal" color="primary">
           <v-card-title variant="tonal" color="primary" class="text-body-2 text-wrap pb-0">
             {{ balanceLabel }}
           </v-card-title>
           <v-row dense class="py-2 px-4">
-            <v-col cols="6" lg="3" md="4">
-              <p>
-                Invertido:
-                <span class="font-weight-bold">{{ parseNumberToCurrency(balance.spent) }}</span>
-              </p>
-            </v-col>
             <v-col cols="6" lg="3" md="4">
               <p>
                 +/-:

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mdiHomeAnalytics, mdiPlusBox, mdiStar, mdiLogout } from '@mdi/js'
+import { mdiHomeAnalytics, mdiStar, mdiLogout } from '@mdi/js'
 import { computed, ref } from 'vue'
 import { useRouter, RouterView } from 'vue-router'
 import { useDisplay } from 'vuetify'
@@ -13,7 +13,6 @@ const authStore = useAuthStore()
 const drawer = ref(false)
 const items = ref([
   { text: 'Home', icon: mdiHomeAnalytics, redirect: 'home' },
-  { text: 'Crear Tip', icon: mdiPlusBox, redirect: 'create-tip' },
   { text: 'Tipsters', icon: mdiStar, redirect: 'tipsters' }
 ])
 

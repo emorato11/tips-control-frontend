@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { mdiDeleteOutline, mdiPlus } from '@mdi/js'
+import { mdiDeleteOutline, mdiPlus, mdiArrowLeft } from '@mdi/js'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -8,6 +8,7 @@ import { Status } from '@/types/Common'
 import type { Selection, CreateTip } from '@/types/Tip'
 import { SPORTS_SELECTIONS } from '@/utils/sports'
 import type { Tipster } from '@/types/Tipster'
+import { useRouter } from 'vue-router'
 
 interface TipFormProps {
   isEditing?: boolean
@@ -15,6 +16,8 @@ interface TipFormProps {
   formValues?: CreateTip
   tipsters: Tipster[]
 }
+
+const router = useRouter()
 
 const props = withDefaults(defineProps<TipFormProps>(), { loading: false })
 
@@ -82,6 +85,10 @@ const addNewSelection = () => {
   selections.value = [...selections.value, { name: '', status: Status.PENDING }]
 }
 
+const goBackHome = () => {
+  router.push('home')
+}
+
 onMounted(() => {
   if (props.isEditing) {
     tipster.value = props.formValues?.tipster
@@ -97,9 +104,18 @@ onMounted(() => {
 </script>
 <template>
   <v-form @submit.prevent="handleSubmit" ref="form" class="px-2">
-    <span class="py-2 text-right text-body-1 font-weight-bold w-100 d-block title">
-      {{ title }}
-    </span>
+    <v-row dense class="my-2">
+      <v-col cols="6">
+        <v-btn variant="text" size="small" :prepend-icon="mdiArrowLeft" @click="goBackHome">
+          Volver a Home
+        </v-btn>
+      </v-col>
+      <v-col cols="6">
+        <span class="text-right text-body-1 font-weight-bold w-100 d-block title">
+          {{ title }}
+        </span>
+      </v-col>
+    </v-row>
     <v-row dense class="mb-4">
       <v-col cols="12" lg="4" md="4" sm="6">
         <v-autocomplete
@@ -240,7 +256,7 @@ onMounted(() => {
     content: '';
     position: absolute;
     right: -16px;
-    bottom: 8px;
+    bottom: 0;
     width: 100px;
     height: 6px;
     transform: skew(-12deg) translateX(-50%);
