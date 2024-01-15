@@ -305,6 +305,16 @@ onMounted(async () => {
                       }}</span>
                     </p>
                   </div>
+
+                  <v-row dense>
+                    <v-col v-for="selection in item.raw.selections" :key="selection.id">
+                      <v-divider
+                        :thickness="4"
+                        class="border-opacity-75"
+                        :color="getColorByStatus(selection.status)"
+                      />
+                    </v-col>
+                  </v-row>
                 </v-card-text>
 
                 <div class="d-flex ga-2 px-4">
