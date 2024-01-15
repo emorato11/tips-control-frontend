@@ -22,12 +22,13 @@ export const useAuthStore = defineStore('auth', () => {
     if (token.value) {
       const userData = decodeCredential(token.value)
 
-      const { given_name, family_name, email, picture, exp } = userData as Record<
+      const { given_name, family_name, email, picture, exp, aud } = userData as Record<
         string,
         string & number
       >
 
       user.value = {
+        id: aud,
         name: given_name,
         lastName: family_name,
         token: token.value,

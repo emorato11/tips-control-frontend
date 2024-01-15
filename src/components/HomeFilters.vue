@@ -2,6 +2,9 @@
 import { onMounted, ref } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { mdiMagnify } from '@mdi/js'
+
+import debounce from 'debounce'
 
 import type { Tipster } from '@/types/Tipster'
 
@@ -34,6 +37,7 @@ const emit = defineEmits<{
 
 const datepicker = ref()
 const date = ref<Date | Date[]>()
+const search = ref()
 const selectedDateFilter = ref()
 const selectedTipsterFilter = ref()
 const selectedStatusFilter = ref()
@@ -83,6 +87,14 @@ const format = (dates: Date | Date[]) => {
   }
 
   return getParsedDate(dates, CUSTOM_LONG_DATE_FORMAT)
+}
+
+const updateSearch = debounce(() => {
+  emit('updateFilters', { search: search.value })
+}, 300)
+
+const resetSearch = () => {
+  emit('updateFilters', { search: '' })
 }
 
 const parseDates = () => {
@@ -163,6 +175,19 @@ onMounted(() => {
         :items="statusOptions"
         variant="outlined"
         @update:modelValue="updateStatusFilter"
+      />
+    </v-col>
+    <v-col cols="6" lg="4" md="4" sm="6">
+      <v-text-field
+        v-model="search"
+        clearable
+        density="comfortable"
+        hide-details
+        placeholder="Search"
+        :prepend-inner-icon="mdiMagnify"
+        variant="outlined"
+        @input="updateSearch"
+        @click:clear="resetSearch"
       />
     </v-col>
   </v-row>

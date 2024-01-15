@@ -45,7 +45,6 @@ const handleSubmit = async () => {
   const { valid } = await form.value.validate()
 
   if (valid) {
-    console.log('sigo')
     await handleCreateTip()
   }
 }

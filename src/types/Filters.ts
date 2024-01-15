@@ -5,4 +5,5 @@ export interface Filters {
   date?: Date[]
   dateType?: DateFilterType
   status?: Status
+  search?: string
 }

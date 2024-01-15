@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores'
 import axios from 'axios'
 
 const apiInstance = axios.create({
@@ -9,5 +10,16 @@ const apiInstance = axios.create({
     'Content-Type': 'application/json'
   }
 })
+
+apiInstance.interceptors.request.use(
+  (config) => {
+    const authStore = useAuthStore()
+    if (authStore.user) config.headers['user_id'] = authStore.user.id
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
 export { apiInstance }

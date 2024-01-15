@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { mdiArrowLeft, mdiArrowRight, mdiLeadPencil, mdiDeleteOutline, mdiPlusBox } from '@mdi/js'
 import type { ChartData } from 'chart.js'
 
@@ -28,12 +28,11 @@ const router = useRouter()
 const { getAllTips, updateFilters, deleteTip, selectTip } = tipsStore
 const { getAllTipsters } = tipstersStore
 
-const search = ref('')
-
 const parsedTips = computed(() => tipsStore.parsedTips)
 const dateFilters = computed(() => tipsStore.filters.date)
 const dateTypeFilters = computed(() => tipsStore.filters.dateType)
 const tipsterFilter = computed(() => tipsStore.filters.tipster)
+const searchFilter = computed(() => tipsStore.filters.search)
 const balance = computed(() => tipsStore.balance)
 
 const tipsters = computed(() => tipstersStore.parsedTipsters)
@@ -164,7 +163,7 @@ onMounted(async () => {
       item-value="name"
       :loading="loading"
       :items-per-page="12"
-      :search="search"
+      :search="searchFilter"
     >
       <template #no-data>
         <v-skeleton-loader v-if="loading"></v-skeleton-loader>
