@@ -134,6 +134,7 @@ onMounted(() => {
           placeholder="Selecciona una fecha"
           class="datepicker w-auto"
           :enable-time-picker="true"
+          time-picker-inline
           auto-apply
         />
       </v-col>

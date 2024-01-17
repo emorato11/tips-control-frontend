@@ -122,6 +122,7 @@ onMounted(() => {
     updateCalendarMode()
   }
   if (props.filters.date) date.value = props.filters.date
+  if (props.filters.search) search.value = props.filters.search
 })
 </script>
 <template>
