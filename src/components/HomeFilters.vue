@@ -52,6 +52,14 @@ const enabledMonthPicker = ref(false)
 const enabledRangePicker = ref(false)
 const enabledWeekPicker = ref(false)
 
+const handleUpdateCalendar = () => {
+  updateCalendarMode()
+
+  emit('updateFilters', { dateType: selectedDateFilter.value })
+
+  datepicker.value.openMenu()
+}
+
 const updateCalendarMode = () => {
   if (selectedDateFilter.value === DateFilterType.RANGE) {
     enabledMonthPicker.value = false
@@ -70,9 +78,6 @@ const updateCalendarMode = () => {
     enabledRangePicker.value = false
     enabledWeekPicker.value = false
   }
-  emit('updateFilters', { dateType: selectedDateFilter.value })
-
-  datepicker.value.openMenu()
 }
 
 const format = (dates: Date | Date[]) => {
@@ -119,9 +124,12 @@ onMounted(() => {
   if (props.filters.status) selectedStatusFilter.value = props.filters.status
   if (props.filters.dateType) {
     selectedDateFilter.value = props.filters.dateType
-    updateCalendarMode()
   }
-  if (props.filters.date) date.value = props.filters.date
+  if (props.filters.date)
+    date.value =
+      selectedDateFilter.value === DateFilterType.SINGLE
+        ? props.filters.date[0]
+        : props.filters.date
   if (props.filters.search) search.value = props.filters.search
 })
 </script>
@@ -136,7 +144,7 @@ onMounted(() => {
         item-title="state"
         item-value="value"
         variant="outlined"
-        @update:modelValue="updateCalendarMode"
+        @update:modelValue="handleUpdateCalendar"
       />
     </v-col>
     <v-col cols="6" lg="4" md="4" sm="6">
