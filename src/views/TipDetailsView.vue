@@ -7,7 +7,7 @@ import { useTipsStore } from '@/stores'
 import { useRouter } from 'vue-router'
 import type { CreateTip, Tip } from '@/types/Tip'
 import { useTipstersStore } from '@/stores/tipsters'
-import { RouteNames } from '@/types/Routes'
+import { RoutesName } from '@/types/Routes'
 
 const router = useRouter()
 
@@ -22,7 +22,7 @@ const tipsters = computed(() => tipstersStore.parsedTipsters)
 const handleUpdateTip = async (form: CreateTip) => {
   await updateTip((selectedTip.value as Tip).id, form)
 
-  router.push({ name: RouteNames.HOME })
+  router.push({ name: RoutesName.HOME })
 }
 
 onMounted(async () => {})

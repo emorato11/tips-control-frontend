@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { mdiHomeAnalytics, mdiStar, mdiLogout } from '@mdi/js'
+import { mdiHomeAnalytics, mdiStar, mdiLogout, mdiChartBox } from '@mdi/js'
 import { computed, ref } from 'vue'
 import { useRouter, RouterView } from 'vue-router'
 import { useDisplay } from 'vuetify'
 
 import { useAuthStore } from '@/stores'
-import { RouteNames } from '@/types/Routes'
+import { RoutesName } from '@/types/Routes'
 const { mobile } = useDisplay({ mobileBreakpoint: 720 })
 
 const router = useRouter()
@@ -13,8 +13,9 @@ const authStore = useAuthStore()
 
 const drawer = ref(false)
 const items = ref([
-  { text: 'Home', icon: mdiHomeAnalytics, redirect: RouteNames.HOME },
-  { text: 'Tipsters', icon: mdiStar, redirect: RouteNames.TIPSTERS }
+  { text: 'Home', icon: mdiHomeAnalytics, redirect: RoutesName.HOME },
+  { text: 'Tipsters', icon: mdiStar, redirect: RoutesName.TIPSTERS },
+  { text: 'Rentabilidad', icon: mdiChartBox, redirect: RoutesName.YIELD }
 ])
 
 const fullName = computed(() => `${authStore.user?.name} ${authStore.user?.lastName}`)

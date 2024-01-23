@@ -6,7 +6,7 @@ import TipsterForm from '@/components/TipsterForm.vue'
 import { useTipstersStore } from '@/stores/tipsters'
 import type { CreateTipster, Tipster } from '@/types/Tipster'
 import { useRouter } from 'vue-router'
-import { RouteNames } from '@/types/Routes'
+import { RoutesName } from '@/types/Routes'
 
 const router = useRouter()
 
@@ -19,7 +19,7 @@ const loading = computed(() => tipstersStore.loading)
 const handleUpdateTipster = async (form: CreateTipster) => {
   await updateTipster((selectedTipster.value as Tipster).id, form)
 
-  router.push({ name: RouteNames.TIPSTERS })
+  router.push({ name: RoutesName.TIPSTERS })
 }
 
 onMounted(async () => {})

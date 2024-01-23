@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores'
-import { RouteNames } from '@/types/Routes'
+import { RoutesName } from '@/types/Routes'
 import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
@@ -13,7 +13,7 @@ const callback = async (response: Record<string, string>) => {
   authStore.setUserToken(response.credential)
   await authStore.getUserDetails()
 
-  router.push({ name: RouteNames.HOME })
+  router.push({ name: RoutesName.HOME })
 }
 </script>
 <template>

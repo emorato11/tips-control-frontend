@@ -1,37 +1,41 @@
-import { RouteNames } from '@/types/Routes'
-import TipsterDetailsView from '@/views/TipsterDetailsView.vue'
+import { RoutesName, RoutesPath } from '@/types/Routes'
 export default [
   {
-    path: '/',
-    name: 'Public',
+    path: RoutesPath.ROOT,
+    name: RoutesName.ROOT,
     component: () => import('@/layouts/BaseLayout.vue'),
-    redirect: '/home',
+    redirect: { name: RoutesName.HOME },
     meta: { requiresAuth: true },
     children: [
       {
-        path: 'home',
-        name: RouteNames.HOME,
+        path: RoutesPath.HOME,
+        name: RoutesName.HOME,
         component: () => import('@/views/HomeView.vue')
       },
       {
-        path: 'tips/:id',
-        name: RouteNames.TIP_DETAILS,
+        path: RoutesPath.TIP_DETAILS,
+        name: RoutesName.TIP_DETAILS,
         component: () => import('@/views/TipDetailsView.vue')
       },
       {
-        path: 'create-tip',
-        name: RouteNames.CREATE_TIP,
+        path: RoutesPath.CREATE_TIP,
+        name: RoutesName.CREATE_TIP,
         component: () => import('@/views/CreateTipView.vue')
       },
       {
-        path: 'tipsters',
-        name: RouteNames.TIPSTERS,
+        path: RoutesPath.TIPSTERS,
+        name: RoutesName.TIPSTERS,
         component: () => import('@/views/TipstersView.vue')
       },
       {
-        path: 'tipsters/:id',
-        name: RouteNames.TIPSTER_DETAILS,
-        component: TipsterDetailsView
+        path: RoutesPath.TIPSTER_DETAILS,
+        name: RoutesName.TIPSTER_DETAILS,
+        component: import('@/views/TipsterDetailsView.vue')
+      },
+      {
+        path: RoutesPath.YIELD,
+        name: RoutesName.YIELD,
+        component: import('@/views/YieldView.vue')
       }
     ]
   }

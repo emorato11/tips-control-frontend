@@ -19,7 +19,7 @@ import {
 } from '@/utils/date'
 import { useTipstersStore } from '@/stores/tipsters'
 import { roundDecimals } from '@/utils/number'
-import { RouteNames } from '@/types/Routes'
+import { RoutesName } from '@/types/Routes'
 
 const tipsStore = useTipsStore()
 const tipstersStore = useTipstersStore()
@@ -144,11 +144,11 @@ const handleRemoveTip = async (id: string) => {
 const handleUpdateTip = async (id: string) => {
   selectTip(id)
 
-  router.push({ name: RouteNames.TIP_DETAILS, params: { id } })
+  router.push({ name: RoutesName.TIP_DETAILS, params: { id } })
 }
 
 const goToCreateTip = () => {
-  router.push({ name: RouteNames.CREATE_TIP })
+  router.push({ name: RoutesName.CREATE_TIP })
 }
 
 onMounted(async () => {
