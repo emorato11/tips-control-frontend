@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import tipsService from '@/services/tips'
 import type { Balance, CreateTip, Tip, TipResume } from '@/types/Tip'
 import { getSportAssets } from '@/utils/tips'
-import { CUSTOM_SHORT_DATE_FORMAT, getParsedDate } from '@/utils/date'
+import { CUSTOM_SHORT_DATE_FORMAT_WITH_TIME, getParsedDate } from '@/utils/date'
 import type { Filters } from '@/types/Filters'
 import { Status } from '@/types/Common'
 
@@ -41,7 +41,7 @@ export const useTipsStore = defineStore('tips', () => {
       return {
         ...tip,
         ...getSportAssets(tip.type),
-        parsedDate: getParsedDate(tip.date, CUSTOM_SHORT_DATE_FORMAT)
+        parsedDate: getParsedDate(tip.date, CUSTOM_SHORT_DATE_FORMAT_WITH_TIME)
       }
     })
   })

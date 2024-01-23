@@ -8,6 +8,13 @@ export const CUSTOM_SHORT_DATE_FORMAT: Intl.DateTimeFormatOptions = {
   month: 'short'
 }
 
+export const CUSTOM_SHORT_DATE_FORMAT_WITH_TIME: Intl.DateTimeFormatOptions = {
+  day: 'numeric',
+  month: 'short',
+  hour: '2-digit',
+  minute: 'numeric'
+}
+
 export const CUSTOM_SHORT_DATE_FORMAT_WITH_YEAR: Intl.DateTimeFormatOptions = {
   day: 'numeric',
   month: 'short',
