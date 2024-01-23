@@ -1,4 +1,4 @@
-import { SPORTS_COLORS } from './Sports'
+import type { SPORTS_COLORS } from './Sports'
 
 export interface SportsAssets {
   icon: string

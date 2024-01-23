@@ -32,10 +32,10 @@ onMounted(async () => {})
   <v-container class="py-0">
     <TipForm
       :loading="loading"
-      :form-values="selectedTip"
+      :formValues="selectedTip"
       :tipsters="tipsters"
-      is-editing
-      @submit-form="handleUpdateTip"
+      isEditing
+      @submitForm="handleUpdateTip"
     />
   </v-container>
 </template>

@@ -33,11 +33,11 @@ const logout = () => {
   <v-layout>
     <v-app-bar color="primary" density="compact" @click.stop="drawer = !drawer">
       <template #prepend v-if="mobile">
-        <v-app-bar-nav-icon></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon />
       </template>
       <div class="d-flex ga-2 align-center" :class="{ 'px-2': mobile, 'px-6': !mobile }">
         <p>{{ fullName }}</p>
-        <v-img :src="authStore.user?.picture" :width="40" :height="40" aspect-ratio="16/9"></v-img>
+        <v-img :src="authStore.user?.picture" :width="40" :height="40" aspectRatio="16/9" />
       </div>
 
       <template #append v-if="!mobile">
@@ -45,14 +45,14 @@ const logout = () => {
           v-for="(item, i) in items"
           :key="i"
           class="text-body-2"
-          :prepend-icon="item.icon"
+          :prependIcon="item.icon"
           variant="text"
           @click="goTo(item.redirect)"
         >
           {{ item.text }}
         </v-btn>
 
-        <v-btn :prepend-icon="mdiLogout" variant="text" class="text-body-2" @click="logout">
+        <v-btn :prependIcon="mdiLogout" variant="text" class="text-body-2" @click="logout">
           Logout
         </v-btn>
       </template>
@@ -68,7 +68,7 @@ const logout = () => {
           @click="goTo(item.redirect)"
         >
           <template #prepend>
-            <v-icon :icon="item.icon"></v-icon>
+            <v-icon :icon="item.icon" />
           </template>
 
           <v-list-item-title> {{ item.text }}</v-list-item-title>
@@ -76,7 +76,7 @@ const logout = () => {
 
         <v-list-item color="primary" @click="logout">
           <template #prepend>
-            <v-icon :icon="mdiLogout" color="red"></v-icon>
+            <v-icon :icon="mdiLogout" color="red" />
           </template>
 
           <v-list-item-title>Logout</v-list-item-title>

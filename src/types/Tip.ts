@@ -1,5 +1,5 @@
 import type { SportsAssets, Status } from './Common'
-import { Sports } from './Sports'
+import type { Sports } from './Sports'
 
 export interface Selection {
   id?: string

@@ -106,7 +106,7 @@ onMounted(() => {
   <v-form @submit.prevent="handleSubmit" ref="form" class="px-2">
     <v-row dense class="my-2">
       <v-col cols="6">
-        <v-btn variant="text" size="small" :prepend-icon="mdiArrowLeft" @click="goBackHome">
+        <v-btn variant="text" size="small" :prependIcon="mdiArrowLeft" @click="goBackHome">
           Volver a Home
         </v-btn>
       </v-col>
@@ -123,8 +123,8 @@ onMounted(() => {
           label="Tipster"
           :rules="[(v) => !!v || 'Requerido']"
           :items="props.tipsters"
-          item-title="name"
-          item-value="value"
+          itemTitle="name"
+          itemValue="value"
           variant="outlined"
         />
       </v-col>
@@ -133,9 +133,9 @@ onMounted(() => {
           v-model="date"
           placeholder="Selecciona una fecha"
           class="datepicker w-auto"
-          :enable-time-picker="true"
-          time-picker-inline
-          auto-apply
+          :enableTimePicker="true"
+          timePickerInline
+          autoApply
         />
       </v-col>
       <v-col cols="12" lg="4" md="4" sm="6">
@@ -144,7 +144,7 @@ onMounted(() => {
           :rules="[(v) => !!v || 'Requerido']"
           label="Nombre del tip"
           variant="outlined"
-        ></v-text-field>
+        />
       </v-col>
 
       <v-col cols="12" lg="4" md="4" sm="6">
@@ -155,8 +155,8 @@ onMounted(() => {
           label="Deporte"
           variant="outlined"
           required
-          item-title="name"
-          item-value="value"
+          itemTitle="name"
+          itemValue="value"
         />
       </v-col>
 
@@ -174,7 +174,7 @@ onMounted(() => {
         <v-text-field
           v-model="spent"
           type="number"
-          hide-details
+          hideDetails
           variant="outlined"
           label="Cantidad Invertida"
           :rules="[(v) => !!v || 'Requerido']"
@@ -184,7 +184,7 @@ onMounted(() => {
         <v-text-field
           v-model="potentialReturn"
           type="number"
-          hide-details
+          hideDetails
           variant="outlined"
           label="Posibles Ganancias"
           :rules="[(v) => !!v || 'Requerido']"

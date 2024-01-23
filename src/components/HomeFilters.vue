@@ -141,8 +141,8 @@ onMounted(() => {
         class="flex-fill"
         label="Filtro de fecha"
         :items="dateFilterOptions"
-        item-title="state"
-        item-value="value"
+        itemTitle="state"
+        itemValue="value"
         variant="outlined"
         @update:modelValue="handleUpdateCalendar"
       />
@@ -153,13 +153,13 @@ onMounted(() => {
         v-model="date"
         class="datepicker w-auto"
         placeholder="Calendario"
-        :enable-time-picker="true"
-        :month-picker="enabledMonthPicker"
+        :enableTimePicker="true"
+        :monthPicker="enabledMonthPicker"
         :range="enabledRangePicker"
-        :week-picker="enabledWeekPicker"
+        :weekPicker="enabledWeekPicker"
         :format="format"
-        @update:model-value="updateDateFilters"
-        auto-apply
+        @update:modelValue="updateDateFilters"
+        autoApply
       />
     </v-col>
     <v-col cols="6" lg="4" md="4" sm="6">
@@ -169,8 +169,8 @@ onMounted(() => {
         class="flex-fill"
         label="Filtro de Tipster"
         :items="props.tipsters"
-        item-title="name"
-        item-value="value"
+        itemTitle="name"
+        itemValue="value"
         variant="outlined"
         @update:modelValue="updateTipsterFilter"
       />
@@ -191,9 +191,9 @@ onMounted(() => {
         v-model="search"
         clearable
         density="comfortable"
-        hide-details
+        hideDetails
         placeholder="Search"
-        :prepend-inner-icon="mdiMagnify"
+        :prependInnerIcon="mdiMagnify"
         variant="outlined"
         @input="updateSearch"
         @click:clear="resetSearch"

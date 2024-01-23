@@ -75,8 +75,8 @@ onMounted(() => {
             label="Deporte"
             variant="outlined"
             required
-            item-title="name"
-            item-value="value"
+            itemTitle="name"
+            itemValue="value"
           />
         </v-col>
       </v-row>
@@ -86,10 +86,10 @@ onMounted(() => {
           <v-textarea
             v-model="description"
             label="Descripcion"
-            auto-grow
+            autoGrow
             variant="outlined"
             rows="1"
-            row-height="15"
+            rowHeight="15"
           />
         </v-col>
       </v-row>

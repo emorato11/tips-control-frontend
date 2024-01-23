@@ -160,23 +160,23 @@ onMounted(async () => {
   <v-container>
     <v-data-iterator
       :items="parsedTips"
-      item-value="name"
+      itemValue="name"
       :loading="loading"
-      :items-per-page="12"
+      :itemsPerPage="12"
       :search="searchFilter"
     >
       <template #no-data>
-        <v-skeleton-loader v-if="loading"></v-skeleton-loader>
+        <v-skeleton-loader v-if="loading" />
       </template>
       <template #header>
         <HomeFilters
           :tipsters="tipsters"
           :filters="tipsStore.filters"
-          @update-filters="handleUpdateFilters"
+          @updateFilters="handleUpdateFilters"
         />
 
         <v-row dense class="justify-end">
-          <v-btn :prepend-icon="mdiPlusBox" color="primary" @click="goToCreateTip">Crear Tip</v-btn>
+          <v-btn :prependIcon="mdiPlusBox" color="primary" @click="goToCreateTip">Crear Tip</v-btn>
         </v-row>
 
         <v-card class="my-4 pa-0" variant="tonal" color="primary">
@@ -196,16 +196,16 @@ onMounted(async () => {
                   :class="balance.potentialReturn >= 0 ? 'text-success' : 'text-error'"
                   class="font-weight-bold"
                 >
-                  {{ parseNumberToCurrency(balance.potentialReturn) }}</span
-                >
+                  {{ parseNumberToCurrency(balance.potentialReturn) }}
+                </span>
               </p>
             </v-col>
             <v-col cols="6" lg="3" md="4">
               <p>
                 Pendiente:
                 <span class="font-weight-bold text-orange">
-                  {{ parseNumberToCurrency(balance.pending) }}</span
-                >
+                  {{ parseNumberToCurrency(balance.pending) }}
+                </span>
               </p>
             </v-col>
             <v-col cols="6" lg="3" md="4">
@@ -244,8 +244,9 @@ onMounted(async () => {
                 <span
                   class="font-weight-bold"
                   :class="wonPercentaje >= 50 ? 'text-success' : 'text-error'"
-                  >{{ wonPercentaje }}%</span
                 >
+                  {{ wonPercentaje }}%
+                </span>
               </p>
             </v-col>
           </v-row>
@@ -266,18 +267,18 @@ onMounted(async () => {
             >
               <v-card border flat variant="outlined" :color="getColorByStatus(item.raw.status)">
                 <v-card-title class="d-flex align-center justify-start ga-1">
-                  <v-icon :color="item.raw.color" :icon="item.raw.icon" start size="18"></v-icon>
+                  <v-icon :color="item.raw.color" :icon="item.raw.icon" start size="18" />
 
-                  <span class="font-weight-bold text-center text-truncate">{{
-                    item.raw.name
-                  }}</span>
+                  <span class="font-weight-bold text-center text-truncate">
+                    {{ item.raw.name }}
+                  </span>
 
-                  <span class="ml-auto text-body-2 font-weight-thin">{{
-                    item.raw.parsedDate
-                  }}</span>
+                  <span class="ml-auto text-body-2 font-weight-thin">
+                    {{ item.raw.parsedDate }}
+                  </span>
                 </v-card-title>
 
-                <v-divider></v-divider>
+                <v-divider />
 
                 <v-card-text>
                   <div class="d-flex justify-space-between">
@@ -294,15 +295,15 @@ onMounted(async () => {
                   <div class="d-flex flex-column py-4">
                     <p class="text-body-2 font-weight-500">
                       Invertido:
-                      <span class="text-body-1 font-weight-bold">{{
-                        parseNumberToCurrency(item.raw.spent)
-                      }}</span>
+                      <span class="text-body-1 font-weight-bold">
+                        {{ parseNumberToCurrency(item.raw.spent) }}
+                      </span>
                     </p>
                     <p class="text-body-2 font-weight-500">
                       Posibles ganancias:
-                      <span class="text-body-1 font-weight-bold">{{
-                        parseNumberToCurrency(item.raw.potentialReturn)
-                      }}</span>
+                      <span class="text-body-1 font-weight-bold"
+                        >{{ parseNumberToCurrency(item.raw.potentialReturn) }}
+                      </span>
                     </p>
                   </div>
 
@@ -319,12 +320,12 @@ onMounted(async () => {
 
                 <div class="d-flex ga-2 px-4">
                   <v-switch
-                    :model-value="isExpanded(item as any)"
+                    :modelValue="isExpanded(item as any)"
                     :label="`${isExpanded(item as any) ? 'Ocultar' : 'Mostrar'} selecciones`"
                     density="compact"
                     inset
                     @click="() => toggleExpand(item as any)"
-                  ></v-switch>
+                  />
 
                   <v-btn
                     class="align-self-center"
@@ -347,7 +348,7 @@ onMounted(async () => {
                   />
                 </div>
 
-                <v-divider></v-divider>
+                <v-divider />
 
                 <v-expand-transition>
                   <div v-if="isExpanded(item as any)">
@@ -382,7 +383,7 @@ onMounted(async () => {
             variant="tonal"
             rounded
             @click="prevPage"
-          ></v-btn>
+          />
 
           <div class="mx-2 text-caption">Page {{ page }} of {{ pageCount }}</div>
 
@@ -393,7 +394,7 @@ onMounted(async () => {
             variant="tonal"
             rounded
             @click="nextPage"
-          ></v-btn>
+          />
         </div>
       </template>
     </v-data-iterator>

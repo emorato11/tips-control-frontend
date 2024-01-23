@@ -1,4 +1,4 @@
-import { DateFilterType, Status } from './Common'
+import type { DateFilterType, Status } from './Common'
 
 export interface Filters {
   tipster?: string | null

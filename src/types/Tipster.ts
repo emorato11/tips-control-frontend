@@ -1,5 +1,5 @@
 import type { SportsAssets } from './Common'
-import { Sports } from './Sports'
+import type { Sports } from './Sports'
 
 export interface Tipster extends SportsAssets {
   id: string

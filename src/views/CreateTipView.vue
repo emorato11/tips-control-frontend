@@ -36,7 +36,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <TipForm :loading="loading" :tipsters="tipsters" @submit-form="handleCreateTip" />
+  <TipForm :loading="loading" :tipsters="tipsters" @submitForm="handleCreateTip" />
 </template>
 
 <style scoped></style>

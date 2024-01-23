@@ -29,9 +29,9 @@ onMounted(async () => {})
   <v-container>
     <TipsterForm
       :loading="loading"
-      :form-values="selectedTipster"
-      is-editing
-      @submit-form="handleUpdateTipster"
+      :formValues="selectedTipster"
+      isEditing
+      @submitForm="handleUpdateTipster"
     />
   </v-container>
 </template>

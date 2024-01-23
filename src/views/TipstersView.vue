@@ -40,7 +40,7 @@ onMounted(async () => {
 
 <template>
   <v-container>
-    <v-tabs v-model="tab" fixed-tabs bg-color="primary">
+    <v-tabs v-model="tab" fixedTabs bgColor="primary">
       <v-tab value="list">Tipsters</v-tab>
       <v-tab value="create">Añadir Tipster</v-tab>
     </v-tabs>
@@ -48,17 +48,10 @@ onMounted(async () => {
       <v-window-item value="list">
         <v-data-iterator
           :items="parsedTipsters"
-          item-value="name"
-          :items-per-page="6"
+          itemValue="name"
+          :itemsPerPage="6"
           :search="search"
         >
-          <!-- <template #header>
-            <HomeFilters
-              @update-filters="handleUpdateFilters"
-              @update-date-type="updateDateFilterType"
-            />
-          </template> -->
-
           <template #default="{ items }">
             <v-container class="px-0" fluid>
               <v-row dense>
@@ -86,7 +79,7 @@ onMounted(async () => {
                       </v-row>
                     </v-card-title>
 
-                    <v-divider></v-divider>
+                    <v-divider />
 
                     <v-card-text class="d-flex justify-space-between align-center">
                       <span class="font-weight-500">{{ item.raw.description }}</span>
@@ -127,7 +120,7 @@ onMounted(async () => {
                 variant="tonal"
                 rounded
                 @click="prevPage"
-              ></v-btn>
+              />
 
               <div class="mx-2 text-caption">Page {{ page }} of {{ pageCount }}</div>
 
@@ -138,14 +131,14 @@ onMounted(async () => {
                 variant="tonal"
                 rounded
                 @click="nextPage"
-              ></v-btn>
+              />
             </div>
           </template>
         </v-data-iterator>
       </v-window-item>
 
       <v-window-item value="create">
-        <TipsterForm :loading="loading" @submit-form="handleCreateTipster" />
+        <TipsterForm :loading="loading" @submitForm="handleCreateTipster" />
       </v-window-item>
     </v-window>
   </v-container>
