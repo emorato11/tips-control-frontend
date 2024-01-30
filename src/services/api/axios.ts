@@ -14,7 +14,7 @@ const apiInstance = axios.create({
 apiInstance.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore()
-    if (authStore.user) config.headers['user_id'] = authStore.user.id
+    if (authStore.user) config.headers['user_id'] = authStore.user.email
     return config
   },
   (error) => {
