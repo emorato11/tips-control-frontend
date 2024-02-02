@@ -17,6 +17,7 @@
     "axios": "^1.6.2",
     "chart.js": "^4.4.1",
     "debounce": "^2.0.0",
+    "lightweight-charts": "^4.1.2",
     "luxon": "^3.4.4",
     "pinia": "^2.1.7",
     "vue": "^3.3.11",

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { mdiArrowLeft, mdiArrowRight, mdiLeadPencil, mdiDeleteOutline, mdiPlusBox } from '@mdi/js'
-import type { ChartData } from 'chart.js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
-import GraphicBar from '@/components/GraphicBar.vue'
+import LWChart from '@/components/LWChart.vue'
+
 import { useTipsStore } from '@/stores'
 import { DateFilterType, Status } from '@/types/Common'
 import type { Filters } from '@/types/Filters'
@@ -20,6 +20,8 @@ import {
 import { useTipstersStore } from '@/stores/tipsters'
 import { roundDecimals } from '@/utils/number'
 import { RoutesName } from '@/types/Routes'
+import { convertTipsToGraphicData } from '@/utils/tips'
+import type { SeriesOptions, ChartOptions } from '@/types/LW'
 
 const tipsStore = useTipsStore()
 const tipstersStore = useTipstersStore()
@@ -28,14 +30,35 @@ const router = useRouter()
 const { getAllTips, updateFilters, deleteTip, selectTip } = tipsStore
 const { getAllTipsters } = tipstersStore
 
+const lwChart = ref()
+
 const parsedTips = computed(() => tipsStore.parsedTips)
 const dateFilters = computed(() => tipsStore.filters.date)
 const dateTypeFilters = computed(() => tipsStore.filters.dateType)
-const tipsterFilter = computed(() => tipsStore.filters.tipster)
+// const tipsterFilter = computed(() => tipsStore.filters.tipster)
 const searchFilter = computed(() => tipsStore.filters.search)
 const balance = computed(() => tipsStore.balance)
 
 const tipsters = computed(() => tipstersStore.parsedTipsters)
+
+//Graphic data
+const seriesOptions = ref<SeriesOptions>({
+  topFillColor1: '#1C2173',
+  topFillColor2: '#1280afcc',
+  topLineColor: '#c5a649e6',
+  bottomFillColor1: '#FABADA',
+  bottomFillColor2: '#FABADA',
+  bottomLineColor: 'red',
+  lineStyle: 2,
+  lineType: 2,
+  pointMarkersVisible: true,
+  lastPriceAnimation: 2
+})
+const chartOptions = ref<ChartOptions>({
+  layout: { background: { color: '#F6F5F2' }, textColor: '#a22029e8' },
+  grid: { vertLines: { color: '#a2202980' }, horzLines: { color: '#a2202980' } },
+  height: 300
+})
 
 const balanceLabel = computed(() => {
   if (dateFilters.value?.length) {
@@ -78,53 +101,8 @@ const wonPercentaje = computed(() => {
   return roundDecimals((wonTips.value / (wonTips.value + failedTips.value)) * 100)
 })
 
-const graphicData = computed<ChartData<'line'>>(() => {
-  const test = parsedTips.value.reduce((accum: { date: string; quantity: number }[], current) => {
-    const date: string = getParsedDate(current.date, {}, 'az')
-
-    const quantity =
-      current.status === Status.WON
-        ? current.potentialReturn - current.spent
-        : current.status === Status.PENDING || current.status === Status.CANCELED
-          ? 0
-          : current.spent * -1
-
-    if (!accum.find((element) => element.date === date)) {
-      accum = [{ date, quantity }, ...accum]
-    } else {
-      const idx = accum.findIndex((element) => element.date === date)
-
-      accum[idx].quantity += roundDecimals(quantity)
-    }
-
-    return accum
-  }, [])
-
-  const labels = test.map((element) => element.date)
-  const datasetData = test
-    .map((element) => element.quantity)
-    .reduce((accum: number[], curr: number, idx) => {
-      if (idx === 0) {
-        accum = [curr]
-      } else {
-        accum = [...accum, accum[idx - 1] + curr]
-      }
-
-      return accum
-    }, [])
-
-  return {
-    labels,
-    datasets: [
-      {
-        label: tipsterFilter.value || 'Total',
-        borderColor: '#566981',
-        pointBackgroundColor: '#e0d124',
-        data: datasetData,
-        tension: 0.25
-      }
-    ]
-  }
+const graphicData = computed<{ time: string; value: number }[]>(() => {
+  return convertTipsToGraphicData(parsedTips.value)
 })
 
 const getColorByStatus = (status: Status) => {
@@ -135,6 +113,7 @@ const getColorByStatus = (status: Status) => {
 }
 
 const handleUpdateFilters = (filters: Filters) => {
+  lwChart.value.fitContent()
   updateFilters(filters)
 }
 
@@ -180,9 +159,16 @@ onMounted(async () => {
         </v-row>
 
         <v-card class="my-4 pa-0" variant="tonal" color="primary">
-          <GraphicBar v-if="graphicData?.datasets" :data="graphicData" />
+          <LWChart
+            v-if="graphicData.length"
+            type="Baseline"
+            :data="graphicData"
+            :autosize="true"
+            :chart-options="chartOptions"
+            :series-options="seriesOptions"
+            ref="lwChart"
+          />
         </v-card>
-        <!-- </v-row> -->
 
         <v-card class="mb-4 pa-0" variant="tonal" color="primary">
           <v-card-title variant="tonal" color="primary" class="text-body-2 text-wrap pb-0">
