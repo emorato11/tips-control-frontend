@@ -30,6 +30,7 @@ import { RoutesName } from '@/types/Routes'
 import { convertTipsToGraphicData } from '@/utils/tips'
 import type { SeriesOptions, ChartOptions } from '@/types/LW'
 import { useAWSStore } from '@/stores/aws'
+import { LWChartOptions, LWSeriesOptions } from '@/utils/LW'
 
 const tipsStore = useTipsStore()
 const tipstersStore = useTipstersStore()
@@ -51,23 +52,8 @@ const balance = computed(() => tipsStore.balance)
 const tipsters = computed(() => tipstersStore.parsedTipsters)
 
 //Graphic data
-const seriesOptions = ref<SeriesOptions>({
-  topFillColor1: '#1C2173',
-  topFillColor2: '#1280afcc',
-  topLineColor: '#c5a649e6',
-  bottomFillColor1: '#FABADA',
-  bottomFillColor2: '#FABADA',
-  bottomLineColor: 'red',
-  lineStyle: 2,
-  lineType: 2,
-  pointMarkersVisible: true,
-  lastPriceAnimation: 2
-})
-const chartOptions = ref<ChartOptions>({
-  layout: { background: { color: '#F6F5F2' }, textColor: '#a22029e8' },
-  grid: { vertLines: { color: '#a2202980' }, horzLines: { color: '#a2202980' } },
-  height: 300
-})
+const seriesOptions = ref<SeriesOptions>(LWSeriesOptions)
+const chartOptions = ref<ChartOptions>(LWChartOptions)
 
 const balanceLabel = computed(() => {
   if (dateFilters.value?.length) {
