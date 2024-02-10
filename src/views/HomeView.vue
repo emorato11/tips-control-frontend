@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
-import { mdiArrowLeft, mdiArrowRight, mdiLeadPencil, mdiDeleteOutline, mdiPlusBox } from '@mdi/js'
+import {
+  mdiArrowLeft,
+  mdiArrowRight,
+  mdiLeadPencil,
+  mdiDeleteOutline,
+  mdiPlusBox,
+  mdiSync
+} from '@mdi/js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
 import LWChart from '@/components/LWChart.vue'
@@ -22,20 +29,22 @@ import { roundDecimals } from '@/utils/number'
 import { RoutesName } from '@/types/Routes'
 import { convertTipsToGraphicData } from '@/utils/tips'
 import type { SeriesOptions, ChartOptions } from '@/types/LW'
+import { useAWSStore } from '@/stores/aws'
 
 const tipsStore = useTipsStore()
 const tipstersStore = useTipstersStore()
+const awsStore = useAWSStore()
 const router = useRouter()
 
 const { getAllTips, updateFilters, deleteTip, selectTip } = tipsStore
 const { getAllTipsters } = tipstersStore
+const { getStoredFiles } = awsStore
 
 const lwChart = ref()
 
 const parsedTips = computed(() => tipsStore.parsedTips)
 const dateFilters = computed(() => tipsStore.filters.date)
 const dateTypeFilters = computed(() => tipsStore.filters.dateType)
-// const tipsterFilter = computed(() => tipsStore.filters.tipster)
 const searchFilter = computed(() => tipsStore.filters.search)
 const balance = computed(() => tipsStore.balance)
 
@@ -130,6 +139,10 @@ const goToCreateTip = () => {
   router.push({ name: RoutesName.CREATE_TIP })
 }
 
+const getStoredTips = async () => {
+  await getStoredFiles()
+}
+
 onMounted(async () => {
   await getAllTips()
   await getAllTipsters()
@@ -155,6 +168,7 @@ onMounted(async () => {
         />
 
         <v-row dense class="justify-end">
+          <v-btn :prependIcon="mdiSync" color="secondary" @click="getStoredTips">Sync</v-btn>
           <v-btn :prependIcon="mdiPlusBox" color="primary" @click="goToCreateTip">Crear Tip</v-btn>
         </v-row>
 

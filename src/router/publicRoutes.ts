@@ -1,4 +1,6 @@
+import { useAWSStore } from '@/stores/aws'
 import { RoutesName, RoutesPath } from '@/types/Routes'
+import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 export default [
   {
     path: RoutesPath.ROOT,
@@ -10,7 +12,18 @@ export default [
       {
         path: RoutesPath.HOME,
         name: RoutesName.HOME,
-        component: () => import('@/views/HomeView.vue')
+        component: () => import('@/views/HomeView.vue'),
+        beforeEnter: async (
+          _: RouteLocationNormalized,
+          _2: RouteLocationNormalized,
+          next: NavigationGuardNext
+        ) => {
+          const awsStore = useAWSStore()
+
+          await awsStore.startSync()
+
+          next()
+        }
       },
       {
         path: RoutesPath.TIP_DETAILS,
@@ -35,7 +48,7 @@ export default [
       {
         path: RoutesPath.YIELD,
         name: RoutesName.YIELD,
-        component: import('@/views/YieldView.vue')
+        component: () => import('@/views/YieldView.vue')
       }
     ]
   }
