@@ -1,6 +1,8 @@
-import { useAWSStore } from '@/stores/aws'
-import { RoutesName, RoutesPath } from '@/types/Routes'
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+
+import { useTelegramStore } from '@/stores/telegram'
+import { RoutesName, RoutesPath } from '@/types/Routes'
+
 export default [
   {
     path: RoutesPath.ROOT,
@@ -18,9 +20,9 @@ export default [
           _2: RouteLocationNormalized,
           next: NavigationGuardNext
         ) => {
-          const awsStore = useAWSStore()
+          const telegramStore = useTelegramStore()
 
-          await awsStore.startSync()
+          await telegramStore.initBot()
 
           next()
         }
