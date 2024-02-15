@@ -13,7 +13,7 @@ import type { SerieData, SeriesOptions, ChartOptions } from '@/types/LW'
 
 const props = defineProps({
   type: {
-    type: Object as PropType<SeriesType>,
+    type: String as PropType<SeriesType>,
     default: 'Baseline'
   },
   data: {

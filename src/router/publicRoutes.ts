@@ -1,6 +1,6 @@
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+// import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 
-import { useTelegramStore } from '@/stores/telegram'
+// import { useTelegramStore } from '@/stores/telegram'
 import { RoutesName, RoutesPath } from '@/types/Routes'
 
 export default [
@@ -14,18 +14,18 @@ export default [
       {
         path: RoutesPath.HOME,
         name: RoutesName.HOME,
-        component: () => import('@/views/HomeView.vue'),
-        beforeEnter: async (
-          _: RouteLocationNormalized,
-          _2: RouteLocationNormalized,
-          next: NavigationGuardNext
-        ) => {
-          const telegramStore = useTelegramStore()
+        component: () => import('@/views/HomeView.vue')
+        // beforeEnter: async (
+        //   _: RouteLocationNormalized,
+        //   _2: RouteLocationNormalized,
+        //   next: NavigationGuardNext
+        // ) => {
+        //   const telegramStore = useTelegramStore()
 
-          await telegramStore.initBot()
+        //   await telegramStore.initBot()
 
-          next()
-        }
+        //   next()
+        // }
       },
       {
         path: RoutesPath.TIP_DETAILS,
