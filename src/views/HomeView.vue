@@ -7,7 +7,8 @@ import {
   mdiLeadPencil,
   mdiDeleteOutline,
   mdiPlusBox,
-  mdiSync
+  mdiSync,
+  mdiChartAreasplineVariant
 } from '@mdi/js'
 
 import HomeFilters from '@/components/HomeFilters.vue'
@@ -108,8 +109,12 @@ const getColorByStatus = (status: Status) => {
 }
 
 const handleUpdateFilters = (filters: Filters) => {
-  lwChart.value.fitContent()
+  fitChartContent()
   updateFilters(filters)
+}
+
+const fitChartContent = () => {
+  lwChart.value.fitContent()
 }
 
 const handleRemoveTip = async (id: string) => {
@@ -153,9 +158,22 @@ onMounted(async () => {
           @updateFilters="handleUpdateFilters"
         />
 
-        <v-row dense class="justify-end">
-          <v-btn :prependIcon="mdiSync" color="secondary" @click="getStoredTips">Sync</v-btn>
-          <v-btn :prependIcon="mdiPlusBox" color="primary" @click="goToCreateTip">Crear Tip</v-btn>
+        <v-row dense class="d-flex space-around">
+          <v-col>
+            <v-btn :prependIcon="mdiSync" color="secondary" @click="getStoredTips">Sync</v-btn>
+            <v-btn :prependIcon="mdiPlusBox" color="primary" @click="goToCreateTip">
+              Crear Tip
+            </v-btn>
+          </v-col>
+          <v-col class="d-flex justify-end">
+            <v-btn
+              :prependIcon="mdiChartAreasplineVariant"
+              color="success"
+              @click="fitChartContent"
+            >
+              Ajustar chart
+            </v-btn>
+          </v-col>
         </v-row>
 
         <v-card class="my-4 pa-0" variant="tonal" color="primary">
