@@ -11,7 +11,7 @@ const callback = async (response: Record<string, string>) => {
   // his Google account from the popup
 
   authStore.setUserToken(response.credential)
-  await authStore.getUserDetails()
+  await authStore.handleLogin()
 
   router.push({ name: RoutesName.HOME })
 }

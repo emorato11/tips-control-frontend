@@ -1,65 +1,63 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import authService from '@/services/auth'
 import type { User } from '@/types/User'
 import { decodeCredential } from 'vue3-google-login'
 
-export const useAuthStore = defineStore('auth', () => {
-  const user = ref<User>()
-  const loading = ref(false)
-  const token = ref(
-    document.cookie
-      .split('; ')
-      .find((str) => str.startsWith('user_token'))
-      ?.split('=')[1]
-  )
+export const useAuthStore = defineStore(
+  'auth',
+  () => {
+    const user = ref<User>()
+    const loading = ref(false)
+    const token = ref(localStorage.getItem('token'))
 
-  const isLogged = computed(() => {
-    return !!user.value?.token || !!token.value
-  })
+    const handleLogin = async () => {
+      loading.value = true
 
-  const getUserDetails = async () => {
-    loading.value = true
-    if (token.value) {
-      const userData = decodeCredential(token.value)
+      if (token.value) {
+        const userData = decodeCredential(token.value)
 
-      const { given_name, family_name, email, picture, exp, aud } = userData as Record<
-        string,
-        string & number
-      >
+        const { name, email, picture, sub } = userData as Record<string, string & number>
 
-      user.value = {
-        id: aud,
-        name: given_name,
-        lastName: family_name,
-        token: token.value,
-        email,
-        picture,
-        expirationTime: exp
+        const userResponse = await authService.login({ name, email, picture, id: sub })
+
+        localStorage.setItem('token', userResponse?.token || '')
+
+        user.value = userResponse?.user
+
+        loading.value = false
       }
+    }
 
-      document.cookie = `user_token=${token.value};exp=${new Date(exp * 1000)}`
+    const recoverUserData = async () => {
+      const response = await authService.recoverUserData()
 
-      loading.value = false
+      console.log(response)
+    }
+
+    const setUserToken = (tokenValue: string) => {
+      token.value = tokenValue
+    }
+
+    const logout = () => {
+      localStorage.removeItem('token')
+      token.value = null
+      user.value = undefined
+    }
+
+    return {
+      user,
+      loading,
+      token,
+      handleLogin,
+      setUserToken,
+      recoverUserData,
+      logout
+    }
+  },
+  {
+    persist: {
+      storage: sessionStorage
     }
   }
-
-  const setUserToken = (tokenValue: string) => {
-    token.value = tokenValue
-  }
-
-  const logout = () => {
-    document.cookie = 'user_token='
-    token.value = undefined
-    user.value = undefined
-  }
-
-  return {
-    user,
-    isLogged,
-    loading,
-    token,
-    getUserDetails,
-    setUserToken,
-    logout
-  }
-})
+)

@@ -18,7 +18,7 @@ const items = ref([
   { text: 'Rentabilidad', icon: mdiChartBox, redirect: RoutesName.YIELD }
 ])
 
-const fullName = computed(() => `${authStore.user?.name} ${authStore.user?.lastName}`)
+const fullName = computed(() => authStore.user?.name)
 
 const goTo = (route: string) => {
   router.push({ name: route })
@@ -26,7 +26,7 @@ const goTo = (route: string) => {
 
 const logout = () => {
   authStore.logout()
-  goTo('login')
+  goTo(RoutesName.LOGIN)
 }
 </script>
 
