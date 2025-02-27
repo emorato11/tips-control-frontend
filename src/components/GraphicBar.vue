@@ -2,31 +2,30 @@
 import type { ChartData, ChartOptions } from 'chart.js'
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
 } from 'chart.js'
-import { Line } from 'vue-chartjs'
+import { Bar } from 'vue-chartjs'
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 interface GraphicProps {
-  data: ChartData<'line'>
+  data: ChartData<'bar'>
 }
 
 const props = defineProps<GraphicProps>()
 
-const graphicOptions: ChartOptions<'line'> = {
+const graphicOptions: ChartOptions<'bar'> = {
   responsive: true,
   maintainAspectRatio: false
 }
 </script>
 <template>
-  <Line :data="props.data" :options="graphicOptions" :style="{ 'background-color': '#7fb1a8' }" />
+  <Bar :data="props.data" :options="graphicOptions" />
 </template>
 
 <style scoped></style>
