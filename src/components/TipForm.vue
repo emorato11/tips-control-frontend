@@ -29,7 +29,8 @@ const emit = defineEmits<{
 
 const form = ref()
 const tipName = ref()
-const tipster = ref()
+const tipsterName = ref()
+const tipsterId = ref()
 const date = ref()
 const type = ref()
 const status = ref(Status.PENDING)
@@ -52,7 +53,8 @@ const handleSubmit = async () => {
 const handleCreateTip = async () => {
   const payload: CreateTip = {
     name: tipName.value,
-    tipster: tipster.value,
+    tipsterId: tipsterId.value,
+    tipsterName: tipsterName.value,
     date: date.value,
     potentialReturn: potentialReturn.value,
     spent: spent.value,
@@ -67,7 +69,8 @@ const handleCreateTip = async () => {
 }
 
 const resetForm = () => {
-  tipster.value = null
+  tipsterId.value = null
+  tipsterName.value = null
   tipName.value = null
   date.value = null
   type.value = null
@@ -89,9 +92,14 @@ const goBackHome = () => {
   router.push(RoutesName.HOME)
 }
 
+const selectTipster = () => {
+  tipsterName.value = props.tipsters.find((tipster) => tipster.id === tipsterId.value)?.name
+}
+
 onMounted(() => {
   if (props.isEditing) {
-    tipster.value = props.formValues?.tipster
+    tipsterId.value = props.formValues?.tipsterId
+    tipsterName.value = props.formValues?.tipsterName
     tipName.value = props.formValues?.name
     date.value = props.formValues?.date
     type.value = props.formValues?.type
@@ -119,13 +127,14 @@ onMounted(() => {
     <v-row dense class="mb-4">
       <v-col cols="12" lg="4" md="4" sm="6">
         <v-autocomplete
-          v-model="tipster"
+          v-model="tipsterId"
           label="Tipster"
           :rules="[(v) => !!v || 'Requerido']"
           :items="props.tipsters"
           itemTitle="name"
-          itemValue="value"
+          itemValue="id"
           variant="outlined"
+          @update:modelValue="selectTipster"
         />
       </v-col>
       <v-col cols="12" lg="4" md="4" sm="6">

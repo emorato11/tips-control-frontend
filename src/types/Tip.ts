@@ -14,7 +14,8 @@ export interface Tip {
   potentialReturn: number
   spent: number
   status: Status
-  tipster: string
+  tipsterId: string
+  tipsterName: string
   type: Sports
   selections: Selection[]
 }
@@ -25,7 +26,8 @@ export interface TipResume extends SportsAssets {
   potentialReturn: number
   spent: number
   status: Status
-  tipster: string
+  tipsterId: string
+  tipsterName: string
   type: string
   selections: Selection[]
   date: Date
