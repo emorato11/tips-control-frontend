@@ -6,7 +6,8 @@ export enum RoutesName {
   TIP_DETAILS = 'tip-details',
   TIPSTERS = 'tipsters',
   TIPSTER_DETAILS = 'tipster-details',
-  YIELD = 'yield'
+  YIELD = 'yield',
+  YIELD_DETAILS = 'yield-details'
 }
 
 export enum RoutesPath {
@@ -17,5 +18,6 @@ export enum RoutesPath {
   TIP_DETAILS = 'tips/:id',
   TIPSTERS = 'tipsters',
   TIPSTER_DETAILS = 'tipsters/:id',
-  YIELD = 'yield'
+  YIELD = 'yield',
+  YIELD_DETAILS = 'yield/:id'
 }

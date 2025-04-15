@@ -51,6 +51,11 @@ export default [
         path: RoutesPath.YIELD,
         name: RoutesName.YIELD,
         component: () => import('@/views/YieldView.vue')
+      },
+      {
+        path: RoutesPath.YIELD_DETAILS,
+        name: RoutesName.YIELD_DETAILS,
+        component: () => import('@/views/YieldDetails.vue')
       }
     ]
   }
