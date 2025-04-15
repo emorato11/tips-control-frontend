@@ -7,7 +7,7 @@ import {
   mdiLeadPencil,
   mdiDeleteOutline,
   mdiPlusBox,
-  mdiSync,
+  // mdiSync,
   mdiChartAreasplineVariant
 } from '@mdi/js'
 
@@ -30,17 +30,17 @@ import { roundDecimals } from '@/utils/number'
 import { RoutesName } from '@/types/Routes'
 import { convertTipsToGraphicData } from '@/utils/tips'
 import type { SeriesOptions, ChartOptions } from '@/types/LW'
-import { useAWSStore } from '@/stores/aws'
+// import { useAWSStore } from '@/stores/aws'
 import { LWChartOptions, LWSeriesOptions } from '@/utils/LW'
 
 const tipsStore = useTipsStore()
 const tipstersStore = useTipstersStore()
-const awsStore = useAWSStore()
+// const awsStore = useAWSStore()
 const router = useRouter()
 
 const { getAllTips, updateFilters, deleteTip, selectTip } = tipsStore
 const { getAllTipsters } = tipstersStore
-const { getStoredFiles } = awsStore
+// const { getStoredFiles } = awsStore
 
 const lwChart = ref()
 
@@ -130,9 +130,9 @@ const goToCreateTip = () => {
   router.push({ name: RoutesName.CREATE_TIP })
 }
 
-const getStoredTips = async () => {
-  await getStoredFiles()
-}
+// const getStoredTips = async () => {
+//   await getStoredFiles()
+// }
 
 onMounted(async () => {
   await getAllTips()
@@ -160,7 +160,7 @@ onMounted(async () => {
 
         <v-row dense class="d-flex space-around">
           <v-col>
-            <v-btn :prependIcon="mdiSync" color="secondary" @click="getStoredTips">Sync</v-btn>
+            <!-- <v-btn :prependIcon="mdiSync" color="secondary" @click="getStoredTips">Sync</v-btn> -->
             <v-btn :prependIcon="mdiPlusBox" color="primary" @click="goToCreateTip">
               Crear Tip
             </v-btn>
