@@ -286,7 +286,7 @@ onMounted(async () => {
 
                 <v-card-text>
                   <div class="d-flex justify-space-between">
-                    <v-chip color="primary" variant="tonal"> {{ item.raw.tipster }} </v-chip>
+                    <v-chip color="primary" variant="tonal"> {{ item.raw.tipsterName }} </v-chip>
                     <v-chip
                       :color="getColorByStatus(item.raw.status)"
                       variant="tonal"

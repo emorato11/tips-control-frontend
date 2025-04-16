@@ -202,4 +202,11 @@ onMounted(() => {
   </v-row>
 </template>
 
-<style scoped></style>
+<style lang="scss">
+.datepicker {
+  input {
+    height: 56px;
+    border-color: rgba(0, 0, 0, 0.3);
+  }
+}
+</style>
