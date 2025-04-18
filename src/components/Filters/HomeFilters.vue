@@ -170,7 +170,7 @@ onMounted(() => {
         label="Filtro de Tipster"
         :items="props.tipsters"
         itemTitle="name"
-        itemValue="value"
+        itemValue="id"
         variant="outlined"
         @update:modelValue="updateTipsterFilter"
       />

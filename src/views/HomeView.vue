@@ -11,7 +11,7 @@ import {
   mdiChartAreasplineVariant
 } from '@mdi/js'
 
-import HomeFilters from '@/components/HomeFilters.vue'
+import HomeFilters from '@/components/Filters/HomeFilters.vue'
 import LWChart from '@/components/LWChart.vue'
 
 import { useTipsStore } from '@/stores'
@@ -114,7 +114,7 @@ const handleUpdateFilters = (filters: Filters) => {
 }
 
 const fitChartContent = () => {
-  lwChart.value.fitContent()
+  lwChart.value?.fitContent()
 }
 
 const handleRemoveTip = async (id: string) => {
