@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-// import { useRouter } from 'vue-router'
-// import { mdiArrowLeft, mdiArrowRight, mdiDeleteOutline, mdiLeadPencil } from '@mdi/js'
+import { useRouter } from 'vue-router'
+import { mdiArrowLeft } from '@mdi/js'
 
-// import { RoutesName } from '@/types/Routes'
 import { usePaymentsStore } from '@/stores/payments'
 import { PAYMENTS_TYPES } from '@/utils/payments'
 import { useRoute } from 'vue-router'
@@ -14,7 +13,7 @@ import { useYieldStore } from '@/stores/yield'
 const paymentsStore = usePaymentsStore()
 const tipstersStore = useTipstersStore()
 const yieldStore = useYieldStore()
-// const router = useRouter()
+const router = useRouter()
 const route = useRoute()
 
 const tab = ref('yield')
@@ -48,6 +47,10 @@ const handleCreatePayment = async () => {
   type.value = null
 }
 
+const goBack = () => {
+  router.go(-1)
+}
+
 onMounted(async () => {
   const tipsterId = route.params.id as string
   if (!tipsters.value.length) {
@@ -63,6 +66,11 @@ onMounted(async () => {
 
 <template>
   <v-container>
+    <v-col cols="6">
+        <v-btn variant="text" size="small" :prependIcon="mdiArrowLeft" @click="goBack">
+          Volver a vista general
+        </v-btn>
+      </v-col>
     <v-tabs v-model="tab" fixedTabs bgColor="primary">
       <v-tab value="yield">Rentabilidad</v-tab>
       <v-tab value="create">Añadir Pago</v-tab>
