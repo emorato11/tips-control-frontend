@@ -34,5 +34,7 @@ export interface TipResume extends SportsAssets {
   parsedDate: string
 }
 
+export type TipYield = Omit<Tip, 'potentialReturn' | 'spent' | 'selections'> & { returned: number }
+
 export type Balance = Pick<Tip, 'spent' | 'potentialReturn'> & { pending: number }
 export type CreateTip = Omit<Tip, 'id'>

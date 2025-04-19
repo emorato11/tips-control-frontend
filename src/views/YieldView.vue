@@ -11,7 +11,6 @@ import { useRouter } from 'vue-router'
 import { RoutesName } from '@/types/Routes'
 import { useYieldStore } from '@/stores/yield'
 import type { ChartData } from 'chart.js'
-import { getRandomColor } from '@/utils/sports'
 
 const tipstersStore = useTipstersStore()
 const yieldStore = useYieldStore()
@@ -19,7 +18,6 @@ const router = useRouter()
 
 const { getAllTipsters } = tipstersStore
 const { getYieldResume } = yieldStore
-
 
 const parsedTipsters = computed(() => tipstersStore.parsedTipsters)
 const yieldResume = computed(() => yieldStore.yieldResume)
@@ -59,9 +57,19 @@ const setChartData = () => {
     labels: yieldResume.value.map((y) => y.tipsterName),
     datasets: [
       {
-        label: 'Rentabilidad (€)',
-        backgroundColor: getRandomColor(),
-        data: yieldResume.value.map((t) => t.yield)
+        label: 'Resumen Tips',
+        backgroundColor: '#1280afcc',
+        data: yieldResume.value.map((t) => t.tipsYield),
+        borderWidth: 2,
+        borderRadius: 10
+        // borderSkipped: false
+      },
+      {
+        label: 'Pagos',
+        backgroundColor: '#c5a649e6',
+        data: yieldResume.value.map((t) => t.paymentsYield * -1),
+        borderWidth: 2,
+        borderRadius: 10
       }
     ]
   }
@@ -85,7 +93,7 @@ const setChartData = () => {
         </v-col>
       </v-row>
 
-      <v-card v-if="chartData" class="mt-4 pa-4 w-100">
+      <v-card v-if="chartData" class="mt-4 pa-4 w-100 h-100">
         <Bar :data="chartData" />
       </v-card>
       <!-- <v-card v-if="doughnutData" class="mt-4 pa-4 w-100">

@@ -2,13 +2,24 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { mdiArrowLeft } from '@mdi/js'
+import { useRoute } from 'vue-router'
+
+import DateFilter from '@/components/Filters/Date.vue'
+import LWChart from '@/components/LWChart.vue'
 
 import { usePaymentsStore } from '@/stores/payments'
-import { PAYMENTS_TYPES } from '@/utils/payments'
-import { useRoute } from 'vue-router'
-import { useTipstersStore } from '@/stores'
-import type { Tipster } from '@/types/Tipster'
 import { useYieldStore } from '@/stores/yield'
+import { useTipstersStore } from '@/stores/tipsters'
+
+import type { Tipster } from '@/types/Tipster'
+import type { Filters } from '@/types/Filters'
+import type { SeriesOptions, ChartOptions } from '@/types/LW'
+
+import { LWChartOptions, LWSeriesOptions } from '@/utils/LW'
+import { PAYMENTS_TYPES } from '@/utils/payments'
+import { convertYieldToGraphicData } from '@/utils/yield'
+import { parseNumberToCurrency } from '@/utils/currency'
+import { onUnmounted } from 'vue'
 
 const paymentsStore = usePaymentsStore()
 const tipstersStore = useTipstersStore()
@@ -21,12 +32,18 @@ const name = ref('')
 const spent = ref(null)
 const type = ref(null)
 const selectedTipster = ref<Tipster | null>(null)
-// const search = ref()
 
+const seriesOptions = ref<SeriesOptions>(LWSeriesOptions)
+const chartOptions = ref<ChartOptions>(LWChartOptions)
+
+const { updateFilters, resetSelectedYield } = yieldStore
 const loading = computed(() => paymentsStore.loading)
-const recentPayments = computed(() => paymentsStore.recentPayments)
 const tipsters = computed(() => tipstersStore.tipsters)
-// const yield = computed(() => yieldStore.selectedYield)
+const filters = computed(() => yieldStore.filters)
+const selectedYield = computed(() => yieldStore.selectedYield)
+
+const tipsBalance = computed(() => selectedYield.value?.tipsYield || 0)
+const paymentsBalance = computed(() => selectedYield.value?.totalPayments || 0)
 
 const handleCreatePayment = async () => {
   if (!name.value || !spent.value || !type.value || !selectedTipster.value) return
@@ -51,6 +68,17 @@ const goBack = () => {
   router.go(-1)
 }
 
+const handleUpdateFilters = (filters: Filters) => {
+  updateFilters(filters)
+}
+
+const graphicData = computed<{ time: string; value: number }[]>(() => {
+  return convertYieldToGraphicData({
+    tips: selectedYield.value?.tips || [],
+    payments: selectedYield.value?.payments || []
+  })
+})
+
 onMounted(async () => {
   const tipsterId = route.params.id as string
   if (!tipsters.value.length) {
@@ -62,111 +90,82 @@ onMounted(async () => {
 
   await yieldStore.getYieldByTipster(tipsterId)
 })
+
+onUnmounted(() => {
+  resetSelectedYield()
+})
 </script>
 
 <template>
   <v-container>
     <v-col cols="6">
-        <v-btn variant="text" size="small" :prependIcon="mdiArrowLeft" @click="goBack">
-          Volver a vista general
-        </v-btn>
-      </v-col>
+      <v-btn variant="text" size="small" :prependIcon="mdiArrowLeft" @click="goBack">
+        Volver a vista general
+      </v-btn>
+    </v-col>
     <v-tabs v-model="tab" fixedTabs bgColor="primary">
       <v-tab value="yield">Rentabilidad</v-tab>
       <v-tab value="create">Añadir Pago</v-tab>
     </v-tabs>
     <v-window v-model="tab">
       <v-window-item value="yield">
-        Rentabilidad
-        <!-- <v-data-iterator
-          :items="parsedTipsters"
-          itemValue="name"
-          :itemsPerPage="6"
-          :search="search"
-        >
-          <template #default="{ items }">
-            <v-container class="px-0" fluid>
-              <v-row dense>
-                <v-col
-                  v-for="item in items"
-                  :key="item.raw.id"
-                  cols="auto"
-                  lg="3"
-                  md="4"
-                  sm="6"
-                  class="w-100"
-                >
-                  <v-card border flat>
-                    <v-card-title class="d-flex justify-center">
-                      <v-row>
-                        <v-col cols="8">
-                          <span class="font-weight-bold">
-                            {{ item.raw.name }}
-                          </span>
-                        </v-col>
-                        <v-col cols="4" class="d-flex ga-2 align-center justify-end">
-                          <span class="text-body-2 text-capitalize">{{ item.raw.type }}</span>
-                          <v-icon :color="item.raw.color" :icon="item.raw.icon" start size="18" />
-                        </v-col>
-                      </v-row>
-                    </v-card-title>
+        <v-container>
+          <v-row dense>
+            <DateFilter :filters="filters" @updateFilters="handleUpdateFilters" />
+          </v-row>
 
-                    <v-divider />
+          <v-card class="my-4 pa-0" variant="tonal" color="primary">
+            <v-card-title class="poetsen-one-regular">
+              {{ selectedTipster?.name }}
+            </v-card-title>
+            <LWChart
+              v-if="graphicData.length"
+              type="Baseline"
+              :data="graphicData"
+              :autosize="true"
+              :chart-options="chartOptions"
+              :series-options="seriesOptions"
+              ref="lwChart"
+            />
+          </v-card>
+          <v-card class="mb-4 pa-0" variant="tonal" color="primary">
+            <v-card-title variant="tonal" color="primary" class="text-body-2 text-wrap pb-0">
+              Desglose general
+            </v-card-title>
+            <v-row dense class="py-2 px-4">
+              <v-col cols="6" lg="3" md="4">
+                <p>
+                  Balance en Tips:
+                  <span
+                    :class="tipsBalance >= 0 ? 'text-success' : 'text-error'"
+                    class="font-weight-bold"
+                  >
+                    {{ parseNumberToCurrency(tipsBalance) }}
+                  </span>
+                </p>
+              </v-col>
+              <v-col cols="6" lg="3" md="4">
+                <p>
+                  Total Pagos:
+                  <span class="font-weight-bold text-info">
+                    {{ parseNumberToCurrency(paymentsBalance) }}
+                  </span>
+                </p>
+              </v-col>
+            </v-row>
+          </v-card>
 
-                    <v-card-text class="d-flex justify-space-between align-center">
-                      <span class="font-weight-500">{{ item.raw.description }}</span>
-                      <div class="d-flex ga-2">
-                        <v-btn
-                          class="align-self-center"
-                          elevation="4"
-                          variant="outlined"
-                          size="small"
-                          color="orange"
-                          :icon="mdiLeadPencil"
-                          @click="updateTipster(item.raw.id)"
-                        />
+          <div class="text-subtitle-2 mt-4 mb-2">Pagos</div>
 
-                        <v-btn
-                          class="align-self-center"
-                          elevation="4"
-                          variant="outlined"
-                          size="small"
-                          color="error"
-                          :icon="mdiDeleteOutline"
-                          @click="removeTipster(item.raw.id)"
-                        />
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-          </template>
-
-          <template #footer="{ page, pageCount, prevPage, nextPage }">
-            <div class="d-flex align-center justify-center pa-4">
-              <v-btn
-                :disabled="page === 1"
-                :icon="mdiArrowLeft"
-                density="comfortable"
-                variant="tonal"
-                rounded
-                @click="prevPage"
-              />
-
-              <div class="mx-2 text-caption">Page {{ page }} of {{ pageCount }}</div>
-
-              <v-btn
-                :disabled="page >= pageCount"
-                :icon="mdiArrowRight"
-                density="comfortable"
-                variant="tonal"
-                rounded
-                @click="nextPage"
-              />
-            </div>
-          </template>
-        </v-data-iterator> -->
+          <v-expansion-panels variant="accordion">
+            <v-expansion-panel
+              v-for="payment in selectedYield?.payments"
+              :key="payment.id"
+              :text="`Total pagado: ${parseNumberToCurrency(payment.spent)}`"
+              :title="`${payment.typeName}: ${payment.name}`"
+            ></v-expansion-panel>
+          </v-expansion-panels>
+        </v-container>
       </v-window-item>
 
       <v-window-item value="create">
@@ -220,20 +219,15 @@ onMounted(async () => {
             </v-btn>
           </v-container>
         </v-form>
-
-        <v-card class="pa-4 mt-4" elevation="2">
-          <v-card-title>Últimos Pagos</v-card-title>
-          <v-list>
-            <v-list-item v-for="payment in recentPayments" :key="payment.id">
-              <v-list-item-title>
-                {{ payment.name }} - {{ payment.spent }}€ ({{ payment.typeName }})
-              </v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-card>
       </v-window-item>
     </v-window>
   </v-container>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.poetsen-one-regular {
+  font-family: 'Poetsen One', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+</style>

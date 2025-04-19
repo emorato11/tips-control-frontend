@@ -15,7 +15,7 @@ export interface ParsedPayment extends Payment {
 }
 
 export type CreatePayment = Omit<Payment, 'date' | 'description' | 'id'>
-export type YieldPayment = Pick<Payment, 'date' | 'spent' | 'name' | 'typeId' | 'typeName'>
+export type YieldPayment = Pick<Payment, 'date' | 'spent' | 'name' | 'typeId' | 'typeName' | 'id'>
 
 export interface PaymentType {
   id: string

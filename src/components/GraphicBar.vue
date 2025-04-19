@@ -11,18 +11,32 @@ import {
 } from 'chart.js'
 import { Bar } from 'vue-chartjs'
 
+import { useScreenSize } from '@/composables/useScreenSize'
+import { ref } from 'vue'
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 interface GraphicProps {
   data: ChartData<'bar'>
 }
 
+const { isMobile } = useScreenSize()
+
 const props = defineProps<GraphicProps>()
 
-const graphicOptions: ChartOptions<'bar'> = {
+const graphicOptions = ref<ChartOptions<'bar'>>({
   responsive: true,
-  maintainAspectRatio: false
-}
+  maintainAspectRatio: false,
+  indexAxis: isMobile.value ? 'y' : 'x',
+  scales: {
+    x: {
+      stacked: true
+    },
+    y: {
+      stacked: true
+    }
+  }
+})
 </script>
 <template>
   <Bar :data="props.data" :options="graphicOptions" />
