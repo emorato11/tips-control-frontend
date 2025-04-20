@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { mdiArrowLeft } from '@mdi/js'
 import { useRoute } from 'vue-router'
@@ -19,7 +19,7 @@ import { LWChartOptions, LWSeriesOptions } from '@/utils/LW'
 import { PAYMENTS_TYPES } from '@/utils/payments'
 import { convertYieldToGraphicData } from '@/utils/yield'
 import { parseNumberToCurrency } from '@/utils/currency'
-import { onUnmounted } from 'vue'
+import { CUSTOM_SHORT_DATE_FORMAT_WITH_TIME, getParsedDate } from '@/utils/date'
 
 const paymentsStore = usePaymentsStore()
 const tipstersStore = useTipstersStore()
@@ -162,7 +162,7 @@ onUnmounted(() => {
               v-for="payment in selectedYield?.payments"
               :key="payment.id"
               :text="`Total pagado: ${parseNumberToCurrency(payment.spent)}`"
-              :title="`${payment.typeName}: ${payment.name}`"
+              :title="`${payment.name} - ${getParsedDate(payment.date, CUSTOM_SHORT_DATE_FORMAT_WITH_TIME)}`"
             ></v-expansion-panel>
           </v-expansion-panels>
         </v-container>
