@@ -86,14 +86,14 @@ const setChartData = () => {
       </v-card>
 
       <v-row>
-        <v-col v-for="tipster in parsedTipsters" :key="tipster.id" cols="12" sm="6" md="4">
+        <v-col v-for="tipster in parsedTipsters" :key="tipster.id" sm="6">
           <v-btn block color="primary" @click="goToTipsterYield(tipster.id)">
             {{ tipster.name }}
           </v-btn>
         </v-col>
       </v-row>
 
-      <v-card v-if="chartData" class="mt-4 pa-4 w-100 h-100">
+      <v-card v-if="chartData" class="mt-4 pa-4 w-100 chart-bar">
         <Bar :data="chartData" />
       </v-card>
       <!-- <v-card v-if="doughnutData" class="mt-4 pa-4 w-100">
@@ -103,4 +103,8 @@ const setChartData = () => {
   </v-container>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.chart-bar {
+  min-height: 400px;
+}
+</style>
