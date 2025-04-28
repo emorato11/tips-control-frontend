@@ -79,15 +79,17 @@ const setChartData = () => {
 <template>
   <v-container>
     <v-skeleton-loader :loading="loading" type="list-item-two-line" class="w-100">
-      <v-card class="mb-4 pa-4">
-        <v-card-title>
-          Balance General: {{ parseNumberToCurrency(yieldAccumulatedByAll) }}
-        </v-card-title>
-      </v-card>
-
+      
+      <v-row class="w-100">
+        <v-card class="mb-4 pa-4">
+          <v-card-title>
+            Balance General: {{ parseNumberToCurrency(yieldAccumulatedByAll) }}
+          </v-card-title>
+        </v-card>
+      </v-row>
       <v-row>
-        <v-col v-for="tipster in parsedTipsters" :key="tipster.id" sm="6">
-          <v-btn block color="primary" @click="goToTipsterYield(tipster.id)">
+        <v-col v-for="tipster in parsedTipsters" :key="tipster.id" sm="6" class="px-1">
+          <v-btn color="primary" size="small" block @click="goToTipsterYield(tipster.id)">
             {{ tipster.name }}
           </v-btn>
         </v-col>
