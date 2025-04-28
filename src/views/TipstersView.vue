@@ -3,16 +3,22 @@ import { computed, onMounted, ref } from 'vue'
 import { mdiArrowLeft, mdiArrowRight, mdiDeleteOutline, mdiLeadPencil } from '@mdi/js'
 
 import TipsterForm from '@/components/TipsterForm.vue'
+import GroupForm from '@/components/GroupForm.vue'
 
 import { useTipstersStore } from '@/stores/tipsters'
+import { useGroupsStore } from '@/stores/groups'
 import type { CreateTipster } from '@/types/Tipster'
+import type { CreateGroup } from '@/types/Group'
 import { useRouter } from 'vue-router'
 import { RoutesName } from '@/types/Routes'
+import tipsters from '@/services/tipsters'
 
 const tipstersStore = useTipstersStore()
+const groupsStore = useGroupsStore()
 const router = useRouter()
 
 const { getAllTipsters, createTipster, deleteTipster, selectTipster } = tipstersStore
+const { createGroup } = groupsStore
 
 const tab = ref()
 const search = ref()
@@ -22,6 +28,10 @@ const loading = computed(() => tipstersStore.loading)
 
 const handleCreateTipster = async (payload: CreateTipster) => {
   await createTipster(payload)
+}
+
+const handleCreateGroup = async (payload: CreateGroup) => {
+  await createGroup(payload)
 }
 
 const removeTipster = async (id: string) => {
@@ -42,7 +52,8 @@ onMounted(async () => {
   <v-container>
     <v-tabs v-model="tab" fixedTabs bgColor="primary">
       <v-tab value="list">Tipsters</v-tab>
-      <v-tab value="create">Añadir Tipster</v-tab>
+      <v-tab value="create-tipster">Añadir Tipster</v-tab>
+      <v-tab value="create-group">Añadir Grupo</v-tab>
     </v-tabs>
     <v-window v-model="tab">
       <v-window-item value="list">
@@ -137,8 +148,12 @@ onMounted(async () => {
         </v-data-iterator>
       </v-window-item>
 
-      <v-window-item value="create">
+      <v-window-item value="create-tipster">
         <TipsterForm :loading="loading" @submitForm="handleCreateTipster" />
+      </v-window-item>
+
+      <v-window-item value="create-group">
+        <GroupForm :loading="loading" :tipsters="parsedTipsters" @submitForm="handleCreateGroup" />
       </v-window-item>
     </v-window>
   </v-container>
