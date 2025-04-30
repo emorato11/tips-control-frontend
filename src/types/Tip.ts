@@ -13,6 +13,7 @@ export interface Tip {
   name: string
   potentialReturn: number
   spent: number
+  tipType: string
   status: Status
   tipsterId: string
   tipsterName: string

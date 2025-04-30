@@ -7,6 +7,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { Status } from '@/types/Common'
 import type { Selection, CreateTip } from '@/types/Tip'
 import { SPORTS_SELECTIONS } from '@/utils/sports'
+import { TIP_TYPE_SELECTIONS } from '@/utils/tips'
 import type { Tipster } from '@/types/Tipster'
 import { useRouter } from 'vue-router'
 import { RoutesName } from '@/types/Routes'
@@ -34,6 +35,7 @@ const tipsterId = ref()
 const date = ref()
 const type = ref()
 const status = ref(Status.PENDING)
+const tipType = ref()
 const spent = ref()
 const potentialReturn = ref()
 const selections = ref<Selection[]>([{ name: '', status: Status.PENDING }])
@@ -59,6 +61,7 @@ const handleCreateTip = async () => {
     potentialReturn: potentialReturn.value,
     spent: spent.value,
     status: status.value,
+    tipType: tipType.value,
     type: type.value,
     selections: selections.value
   }
@@ -153,6 +156,19 @@ onMounted(() => {
           :rules="[(v) => !!v || 'Requerido']"
           label="Nombre del tip"
           variant="outlined"
+        />
+      </v-col>
+
+      <v-col cols="6" lg="4" md="4" sm="6">
+        <v-select
+          v-model="tipType"
+          class="flex-fill"
+          label="Tipo de Tip"
+          :items="TIP_TYPE_SELECTIONS"
+          variant="outlined"
+          itemTitle="name"
+          itemValue="value"
+          required
         />
       </v-col>
 

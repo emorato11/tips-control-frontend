@@ -14,6 +14,13 @@ import { getParsedDate } from '@/utils/date'
 import { Status } from '@/types/Common'
 import { roundDecimals } from '@/utils/number'
 
+export const TIP_TYPE_SELECTIONS: { name: string; value: string }[] = [
+  { name: 'Free', value: 'free' },
+  { name: 'Premium', value: 'premium' },
+  { name: 'Grupo', value: 'group' },
+  { name: 'De Pago', value: 'pay' }
+]
+
 export const getSportAssets = (sport: Sports) => {
   if (sport === Sports.BASKETBALL) {
     return { icon: mdiBasketball, color: SPORTS_COLORS.basketball }
