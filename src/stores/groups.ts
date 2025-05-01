@@ -15,6 +15,13 @@ export const useGroupsStore = defineStore('groups', () => {
 
     loading.value = false
   }
+  const getAllGroupsByTipsterId = async (tipsterId: string) => {
+    loading.value = true
+    const groupsResponse = await groupsService.getAllByTipsterId({ tipsterId })
+    groups.value = groupsResponse || []
+
+    loading.value = false
+  }
 
   const createGroup = async (newGroup: CreateGroup) => {
     loading.value = true
@@ -47,6 +54,7 @@ export const useGroupsStore = defineStore('groups', () => {
     createGroup,
     selectGroup,
     updateGroup,
+    getAllGroupsByTipsterId,
     selectedGroup,
     groups,
     loading

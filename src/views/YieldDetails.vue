@@ -10,6 +10,7 @@ import LWChart from '@/components/LWChart.vue'
 import { usePaymentsStore } from '@/stores/payments'
 import { useYieldStore } from '@/stores/yield'
 import { useTipstersStore } from '@/stores/tipsters'
+import { useGroupsStore } from '@/stores/groups'
 
 import type { Tipster } from '@/types/Tipster'
 import type { Filters } from '@/types/Filters'
@@ -20,10 +21,12 @@ import { PAYMENTS_TYPES } from '@/utils/payments'
 import { convertYieldToGraphicData } from '@/utils/yield'
 import { parseNumberToCurrency } from '@/utils/currency'
 import { CUSTOM_SHORT_DATE_FORMAT_WITH_TIME, getParsedDate } from '@/utils/date'
+import type { CreatePayment } from '@/types/Payment'
 
 const paymentsStore = usePaymentsStore()
 const tipstersStore = useTipstersStore()
 const yieldStore = useYieldStore()
+const groupsStore = useGroupsStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -31,16 +34,19 @@ const tab = ref('yield')
 const name = ref('')
 const spent = ref(null)
 const type = ref(null)
+const group = ref(null)
 const selectedTipster = ref<Tipster | null>(null)
 
 const seriesOptions = ref<SeriesOptions>(LWSeriesOptions)
 const chartOptions = ref<ChartOptions>(LWChartOptions)
 
 const { updateFilters, resetSelectedYield } = yieldStore
+const { getAllGroupsByTipsterId } = groupsStore
 const loading = computed(() => paymentsStore.loading)
 const tipsters = computed(() => tipstersStore.tipsters)
 const filters = computed(() => yieldStore.filters)
 const selectedYield = computed(() => yieldStore.selectedYield)
+const groups = computed(() => groupsStore.groups)
 
 const tipsBalance = computed(() => selectedYield.value?.tipsYield || 0)
 const paymentsBalance = computed(() => selectedYield.value?.totalPayments || 0)
@@ -50,14 +56,23 @@ const handleCreatePayment = async () => {
 
   const typeName = PAYMENTS_TYPES.find((pType) => pType.id === type.value)?.name || ''
 
-  await paymentsStore.createPayment({
+  const form: CreatePayment = {
     name: name.value,
     spent: spent.value,
     typeId: type.value,
     typeName,
     tipsterId: selectedTipster.value.id,
     tipsterName: selectedTipster.value.name
-  })
+  }
+
+  if (type.value === 'group-access' && group.value) {
+    form.group = {
+      id: group.value,
+      name: groups.value.find((g) => g.id === group.value)?.name || ''
+    }
+  }
+
+  await paymentsStore.createPayment(form)
 
   name.value = ''
   spent.value = null
@@ -89,6 +104,8 @@ onMounted(async () => {
   await paymentsStore.getAllPaymentsByTipster(tipsterId)
 
   await yieldStore.getYieldByTipster(tipsterId)
+
+  await getAllGroupsByTipsterId(tipsterId)
 })
 
 onUnmounted(() => {
@@ -180,7 +197,20 @@ onUnmounted(() => {
                   variant="outlined"
                 />
               </v-col>
-              <v-col cols="12" lg="6" md="6" sm="6">
+              <v-col cols="auto" lg="6" md="6" sm="6">
+                <v-text-field
+                  v-model="spent"
+                  type="number"
+                  hideDetails
+                  variant="outlined"
+                  label="Cantidad"
+                  :rules="[(v) => !!v || 'Requerido']"
+                />
+              </v-col>
+            </v-row>
+
+            <v-row dense>
+              <v-col cols="12" lg="6" md="4" sm="6">
                 <v-select
                   v-model="type"
                   :items="PAYMENTS_TYPES"
@@ -192,18 +222,17 @@ onUnmounted(() => {
                   itemValue="id"
                 />
               </v-col>
-            </v-row>
-
-            <v-row dense>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="spent"
-                  type="number"
-                  hideDetails
-                  variant="outlined"
-                  label="Cantidad"
-                  :rules="[(v) => !!v || 'Requerido']"
-                />
+              <v-col cols="12" lg="4" md="4" sm="6">
+                <v-select
+                    v-if='type === "group-access"'
+                    v-model="group"
+                    class="flex-fill"
+                    label="Grupo"
+                    :items="groups"
+                    variant="outlined"
+                    itemTitle="name"
+                    itemValue="id"
+                  />
               </v-col>
             </v-row>
 

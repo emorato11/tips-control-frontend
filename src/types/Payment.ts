@@ -8,6 +8,7 @@ export interface Payment {
   spent: number
   typeId: string
   typeName: string
+  group?: { id: string; name: string }
 }
 
 export interface ParsedPayment extends Payment {

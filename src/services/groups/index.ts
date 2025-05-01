@@ -12,6 +12,16 @@ export default {
     }
   },
 
+  async getAllByTipsterId({tipsterId}: { tipsterId: string }) {
+    try {
+      const response = await apiInstance.get<Group[]>('/groups/' + tipsterId)
+
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
   async create(group: CreateGroup) {
     try {
       const response = await apiInstance.post<Group>('/groups', group)

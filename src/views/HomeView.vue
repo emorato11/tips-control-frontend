@@ -7,8 +7,12 @@ import {
   mdiLeadPencil,
   mdiDeleteOutline,
   mdiPlusBox,
+  mdiAccountGroup,
+  mdiCurrencyEur,
+  mdiDiamondStone,
+  mdiGift,
   // mdiSync,
-  mdiChartAreasplineVariant
+  mdiChartAreasplineVariant,
 } from '@mdi/js'
 
 import HomeFilters from '@/components/Filters/HomeFilters.vue'
@@ -111,6 +115,13 @@ const getColorByStatus = (status: Status) => {
 const handleUpdateFilters = (filters: Filters) => {
   fitChartContent()
   updateFilters(filters)
+}
+
+const getTipTypeIcon = (tipType: string) => {
+  if (tipType === 'group') return mdiAccountGroup
+  if (tipType === 'free') return mdiGift
+  if (tipType === 'premium') return mdiDiamondStone
+  return mdiCurrencyEur
 }
 
 const fitChartContent = () => {
@@ -287,6 +298,9 @@ onMounted(async () => {
                 <v-card-text>
                   <div class="d-flex justify-space-between">
                     <v-chip color="primary" variant="tonal"> {{ item.raw.tipsterName }} </v-chip>
+  
+                    <v-icon :color="getColorByStatus(item.raw.status)" :icon="getTipTypeIcon(item.raw.tipType)" start size="26"/>
+                      
                     <v-chip
                       :color="getColorByStatus(item.raw.status)"
                       variant="tonal"

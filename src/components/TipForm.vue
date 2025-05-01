@@ -11,6 +11,7 @@ import { TIP_TYPE_SELECTIONS } from '@/utils/tips'
 import type { Tipster } from '@/types/Tipster'
 import { useRouter } from 'vue-router'
 import { RoutesName } from '@/types/Routes'
+import { useGroupsStore } from '@/stores/groups'
 
 interface TipFormProps {
   isEditing?: boolean
@@ -28,10 +29,15 @@ const emit = defineEmits<{
   // (e: 'updateDateType', value: DateFilterType): void
 }>()
 
+const groupsStore = useGroupsStore()
+
+const { getAllGroupsByTipsterId } = groupsStore
+
 const form = ref()
 const tipName = ref()
 const tipsterName = ref()
 const tipsterId = ref()
+const group = ref()
 const date = ref()
 const type = ref()
 const status = ref(Status.PENDING)
@@ -43,6 +49,7 @@ const selections = ref<Selection[]>([{ name: '', status: Status.PENDING }])
 const statusOptions = ref(Object.values(Status))
 
 const title = computed(() => (props.isEditing ? 'Editar Tip' : 'Crear Tip'))
+const groups = computed(() => groupsStore.groups || [])
 
 const handleSubmit = async () => {
   const { valid } = await form.value.validate()
@@ -64,6 +71,13 @@ const handleCreateTip = async () => {
     tipType: tipType.value,
     type: type.value,
     selections: selections.value
+  }
+
+  if (tipType.value === 'group') {
+    const selectedGroup = groups.value.find((g) => g.id === group.value)
+    payload.group = selectedGroup ? {
+      id: selectedGroup?.id,
+      name: selectedGroup?.name } : undefined
   }
 
   emit('submitForm', payload)
@@ -95,8 +109,10 @@ const goBackHome = () => {
   router.push(RoutesName.HOME)
 }
 
-const selectTipster = () => {
+const selectTipster = async () => {
   tipsterName.value = props.tipsters.find((tipster) => tipster.id === tipsterId.value)?.name
+
+  await getAllGroupsByTipsterId(tipsterId.value)
 }
 
 onMounted(() => {
@@ -159,19 +175,6 @@ onMounted(() => {
         />
       </v-col>
 
-      <v-col cols="6" lg="4" md="4" sm="6">
-        <v-select
-          v-model="tipType"
-          class="flex-fill"
-          label="Tipo de Tip"
-          :items="TIP_TYPE_SELECTIONS"
-          variant="outlined"
-          itemTitle="name"
-          itemValue="value"
-          required
-        />
-      </v-col>
-
       <v-col cols="12" lg="4" md="4" sm="6">
         <v-select
           v-model="type"
@@ -214,6 +217,31 @@ onMounted(() => {
           label="Posibles Ganancias"
           :rules="[(v) => !!v || 'Requerido']"
         />
+      </v-col>
+
+      <v-col cols="6" lg="4" md="4" sm="6">
+        <v-select
+          v-model="tipType"
+          class="flex-fill"
+          label="Tipo de Tip"
+          :items="TIP_TYPE_SELECTIONS"
+          variant="outlined"
+          itemTitle="name"
+          itemValue="value"
+          required
+        />
+      </v-col>
+      <v-col cols="6" lg="4" md="4" sm="6">
+        <v-select
+            v-if='tipType === "group"'
+            v-model="group"
+            class="flex-fill"
+            label="Grupo"
+            :items="groups"
+            variant="outlined"
+            itemTitle="name"
+            itemValue="id"
+          />
       </v-col>
     </v-row>
 

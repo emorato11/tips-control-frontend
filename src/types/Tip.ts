@@ -14,6 +14,7 @@ export interface Tip {
   potentialReturn: number
   spent: number
   tipType: string
+  group?: { id: string; name: string }
   status: Status
   tipsterId: string
   tipsterName: string
